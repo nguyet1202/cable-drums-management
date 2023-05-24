@@ -1,11 +1,13 @@
 import {Text} from "../data_displays";
-
+import { ChangeEvent } from 'react';
 type InputProps = {
    size?: keyof typeof InputSize
    theme?: keyof typeof InputTheme
    label?: string
    type?:string
    wrapperStyles?:string
+   value?: string
+   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input(props: InputProps) {
@@ -21,8 +23,9 @@ function Input(props: InputProps) {
          >
             {props.label}
          </Text>
-         <input className={`${size.wrapper} 
-         ${theme.wrapper} ${props.wrapperStyles}`} defaultValue={props.label} type={props.type}
+         <input className={`${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}
+                placeholder={props.label} type={props.type}
+                value={props.value} onChange={props.onChange}
          />
       </label>
    )

@@ -6,6 +6,7 @@ type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HT
    size?: keyof typeof ButtonSize
    theme?: keyof typeof ButtonTheme
    label: string
+   type?:string
    iconLeft?: ReactElement<IconType>
    onClick?: () => void
    wrapperStyles?:string;
@@ -16,7 +17,7 @@ function Button(props: ButtonProps) {
    let theme = ButtonTheme[props.theme ?? "primary"]
 
    return (
-      <button onClick={props.onClick} className={`${style.wrapper} ${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}>
+      <button onClick={props.onClick} className={`${style.wrapper} ${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}type={props.type}>
          <span className={`${style.iconLeft}`}>{props.iconLeft}</span>
          <Text
             size={size.text.size}
