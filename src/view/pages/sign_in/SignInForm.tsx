@@ -1,9 +1,8 @@
 import {Button, Input, Text} from "../../base_components";
 import {auth} from "../../../configs/FirebaseConfig";
 import {signInWithEmailAndPassword, AuthError, UserCredential } from "firebase/auth";
-import React, {useState} from "react";
-import  { ChangeEvent } from 'react';
-
+import React, {useState,ChangeEvent} from "react";
+import {Select} from "../../base_components";
 
 
 function SignInForm() {
@@ -33,26 +32,22 @@ function SignInForm() {
 
    return (
       <form className={`${style.wrapper}`} >
-         <Text
-            size={style.text.size}
-            weight={style.text.weight}
-            color={style.text.color}
-            font={style.text.font}
-            wrapperStyles={style.text.wrapperStyles}
-         >
+         <Text {...style.text}>
             LOGIN HERE
          </Text>
-         <Input size={style.inputEmail.size} label={"Enter email"}
-                wrapperStyles={style.inputEmail.wrapperStyles}
+         <Select {...style.select}>
+            <option value="option1">Tùy chọn 1</option>
+            <option value="option2">Tùy chọn 2</option>
+            <option value="option3">Tùy chọn 3</option>
+         </Select>
+         <Input {...style.inputEmail} label={"Enter email"}
                 value={email} onChange={handleEmailChange}
          />
-         <Input size={style.inputEmail.size} label={"Password"}
-                wrapperStyles={style.inputEmail.wrapperStyles}
+         <Input {...style.inputEmail} label={"Password"}
                 type={"password"} value={password} onChange={handlePasswordChange}
          />
-         <Button type="button" size={style.submitBtn.size} theme={style.submitBtn.theme}
-                 label={"Login"} wrapperStyles={style.submitBtn.wrapperStyles}
-                 onClick={handleLogin}
+         <Button type="button" {...style.submitBtn}
+                 label={"Login"} onClick={handleLogin}
          />
       </form>
    )
@@ -70,6 +65,11 @@ const style = {
       size: "lg" as "lg",
       theme: "secondary" as "secondary",
       wrapperStyles:"w-full text-center xs:px-[17px] sm:px-[40px] sm:py-[15px] md:px-[20px] lg:px-[15px] 2xl:px-[50px]"
+   },
+   select: {
+      selectSize:"md" as "md",
+      theme: "primary" as "primary",
+      wrapperStyles:""
    },
    text:{
       size:"2xl" as "2xl",

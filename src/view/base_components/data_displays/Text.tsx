@@ -1,6 +1,6 @@
 import {DetailedHTMLProps, HTMLAttributes} from "react"
-
-type TextProps = DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement> & {
+type p = DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+type TextProps = p & {
    size?: keyof typeof TextSize
    weight?: keyof typeof TextWeight
    color?:keyof typeof TextColor
@@ -9,8 +9,18 @@ type TextProps = DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLPar
 }
 
 function Text (props: TextProps) {
+
+   let {
+      size,
+      weight,
+      color,
+      font,
+      wrapperStyles,
+      ...p
+   } = props
+
    return <p
-      {...props}
+      {...p}
       className={`${style.text} ${TextFont[props.font ?? "A"]} ${TextSize[props.size ?? "base"]} ${TextWeight[props.weight ?? "normal"]} ${TextColor[props.color ?? "black"]} ${props.wrapperStyles}`}
    >
       {props.children}

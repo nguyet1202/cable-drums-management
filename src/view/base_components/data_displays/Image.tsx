@@ -4,17 +4,24 @@ type ImageProps = DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLIma
    wrapperStyles?: string;
    width?: string;
    height?: string;
-   borderRadius?: string;
+   borderRadius?: keyof typeof BorderRadius;
 };
 
 function Image(props: ImageProps) {
-   return <img {...props} className={`${props.wrapperStyles} ${props.width} ${props.height}`} />;
+   let {
+      width,
+      height,
+      borderRadius,
+      wrapperStyles,
+      ...image
+   } = props
+   return <img {...image} className={`${props.wrapperStyles} ${props.width} ${props.height} ${BorderRadius[props.borderRadius ?? "none"]}`} />;
 }
-const borderRadius = {
-   "none":"",
-   "xs": "rounded",
-   "md": "rounded-md",
-   "lg": "rounded-lg",
-   "full": "rounded-full",
+const BorderRadius = {
+   none:"rounded-none",
+   xs: "rounded",
+   md: "rounded-md",
+   lg: "rounded-lg",
+   full: "rounded-full",
 }
 export default Image;
