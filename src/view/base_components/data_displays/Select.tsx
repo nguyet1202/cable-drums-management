@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, ReactElement, SelectHTMLAttributes } from "react";
+import {  DetailedHTMLProps, SelectHTMLAttributes } from "react";
 
 type SelectProps = DetailedHTMLProps<
    SelectHTMLAttributes<HTMLSelectElement>,
@@ -31,7 +31,7 @@ const style = {
 
 const SelectTheme = {
    primary: {
-      wrapper: "",
+      wrapper: "bg-W2 focus:outline-none focus:border-sky-500 rounded-lg text-lg font-font font-semibold text-BB shadow-xl",
    },
    secondary: {
       wrapper: "bg-B1 rounded-lg shadow-lg",

@@ -14,6 +14,7 @@ module.exports = {
     colors: {
       "BB": "#4A4A4A",
       "W":"#F6F6F6",
+      "W2":"#FFFFFF",
       "B1":"#4461F2",
       "B2":"#E3ECF5",
       "G":"#61676C",

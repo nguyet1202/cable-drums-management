@@ -1,5 +1,5 @@
 import SignInForm from "./SignInForm";
-import {Image} from "../../base_components";
+import {Image} from "../../../base_components";
 import {SignInText} from "./index";
 
 type SignInProps={

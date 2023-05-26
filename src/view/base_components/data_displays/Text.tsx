@@ -9,7 +9,6 @@ type TextProps = p & {
 }
 
 function Text (props: TextProps) {
-
    let {
       size,
       weight,

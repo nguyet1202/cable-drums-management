@@ -1,8 +1,8 @@
-import {Button, Input, Text} from "../../base_components";
-import {auth} from "../../../configs/FirebaseConfig";
+import {Button, Input, Text} from "../../../base_components";
+import {auth} from "../../../../configs/FirebaseConfig";
 import {signInWithEmailAndPassword, AuthError, UserCredential } from "firebase/auth";
 import React, {useState,ChangeEvent} from "react";
-import {Select} from "../../base_components";
+import {Select} from "../../../base_components";
 
 
 function SignInForm() {
@@ -36,9 +36,11 @@ function SignInForm() {
             LOGIN HERE
          </Text>
          <Select {...style.select}>
-            <option value="option1">Tùy chọn 1</option>
-            <option value="option2">Tùy chọn 2</option>
-            <option value="option3">Tùy chọn 3</option>
+            <option value="option1">Choose your role</option>
+            <option value="option2">Admin</option>
+            <option value="option3">Planner</option>
+            <option value="option3">Supply Vendor</option>
+            <option value="option3">Project Contractor</option>
          </Select>
          <Input {...style.inputEmail} label={"Enter email"}
                 value={email} onChange={handleEmailChange}
@@ -69,7 +71,7 @@ const style = {
    select: {
       selectSize:"md" as "md",
       theme: "primary" as "primary",
-      wrapperStyles:""
+      wrapperStyles:"border-0 border-B1"
    },
    text:{
       size:"2xl" as "2xl",
