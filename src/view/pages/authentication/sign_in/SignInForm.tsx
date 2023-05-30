@@ -1,20 +1,14 @@
-import {Button, Input, Text} from "../../../base_components";
+import {Button, Input, Text,Select} from "../../../base_components";
 import {auth} from "../../../../configs/FirebaseConfig";
 import {signInWithEmailAndPassword, AuthError, UserCredential } from "firebase/auth";
-import React, {useState,ChangeEvent} from "react";
-import {Select} from "../../../base_components";
-
-
+import React, {useState} from "react";
+import { getDatabase, ref, get } from 'firebase/database';
+import { useNavigate } from "react-router-dom";
 function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
-   console.log(email)
-   const handleEmailChange = (event:ChangeEvent<HTMLInputElement>) => {
-      setEmail(event.target.value);
-   };
-   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setPassword(event.target.value);
-   };
+   const [role, setRole] = useState<string>('');
+   const navigate = useNavigate();
    const handleLogin = async () => {
       try {
          if (!email || !password) {
@@ -22,7 +16,15 @@ function SignInForm() {
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
-         console.log('Success!', user);
+         const database = getDatabase();
+         const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
+         const userData = userDataSnapshot.val();
+         if (userData && userData.role === role) {
+            localStorage.setItem('role', role);
+            navigate(`/${role}`, { replace: true });
+         } else {
+            throw new Error("Invalid user role");
+         }
       } catch (error) {
          const errorCode = (error as AuthError).code;
          const errorMessage = (error as AuthError).message;
@@ -35,18 +37,18 @@ function SignInForm() {
          <Text {...style.text}>
             LOGIN HERE
          </Text>
-         <Select {...style.select}>
-            <option value="option1">Choose your role</option>
-            <option value="option2">Admin</option>
-            <option value="option3">Planner</option>
-            <option value="option3">Supply Vendor</option>
-            <option value="option3">Project Contractor</option>
+         <Select {...style.select} value={role} onChange={(event) => setRole(event.target.value)}>
+            <option value="">Choose your role</option>
+            <option value="admin">Admin</option>
+            <option value="planner">Planner</option>
+            <option value="supply_vendor">Supply Vendor</option>
+            <option value="project_contractor">Project Contractor</option>
          </Select>
          <Input {...style.inputEmail} label={"Enter email"}
-                value={email} onChange={handleEmailChange}
+                value={email}  onChange={(event) => setEmail(event.target.value)}
          />
          <Input {...style.inputEmail} label={"Password"}
-                type={"password"} value={password} onChange={handlePasswordChange}
+                type={"password"} value={password}  onChange={(event) => setPassword(event.target.value)}
          />
          <Button type="button" {...style.submitBtn}
                  label={"Login"} onClick={handleLogin}
