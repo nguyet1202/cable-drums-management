@@ -1,4 +1,4 @@
-import BasedRouting from "./BasedRouting";
-import {AuthNavigation} from "./RoleNavigation";
-import {PrivateRoute} from "./RoleNavigation";
-export {BasedRouting,AuthNavigation,PrivateRoute}
+import MainRouting from "./MainRouting";
+import {PrivateRoute} from "./PrivateRoute";
+import LoginStatus from "./LoginStatus";
+export {MainRouting,PrivateRoute,LoginStatus}
