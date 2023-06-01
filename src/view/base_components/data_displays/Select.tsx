@@ -1,4 +1,4 @@
-import {ChangeEvent, DetailedHTMLProps, SelectHTMLAttributes} from "react";
+import {ChangeEvent,FocusEvent, DetailedHTMLProps, SelectHTMLAttributes} from "react";
 
 type SelectProps = DetailedHTMLProps<
    SelectHTMLAttributes<HTMLSelectElement>,
@@ -8,6 +8,7 @@ type SelectProps = DetailedHTMLProps<
    theme?: keyof typeof SelectTheme;
    wrapperStyles?: string;
    onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
+   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 };
 
 function Select(props: SelectProps) {
@@ -20,7 +21,7 @@ function Select(props: SelectProps) {
       <select
          {...s}
          className={`${style.select} ${Size.wrapper} ${Theme.wrapper} ${props.wrapperStyles}`}
-         onChange={props.onChange}
+         onChange={props.onChange} onBlur={props.onBlur}
       >
          {props.children}
       </select>

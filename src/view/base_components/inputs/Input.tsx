@@ -1,5 +1,5 @@
 import {Text} from "../data_displays";
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
 type InputProps = {
    size?: keyof typeof InputSize
    theme?: keyof typeof InputTheme
@@ -8,6 +8,7 @@ type InputProps = {
    wrapperStyles?:string
    value?: string
    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 }
 
 function Input(props: InputProps) {
@@ -25,7 +26,7 @@ function Input(props: InputProps) {
          </Text>
          <input className={`${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}
                 placeholder={props.label} type={props.type}
-                value={props.value} onChange={props.onChange}
+                value={props.value} onChange={props.onChange} onBlur={props.onBlur}
          />
       </label>
    )
