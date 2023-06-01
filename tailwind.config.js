@@ -20,7 +20,8 @@ module.exports = {
       "G":"#61676C",
       "E":"#dbd1c299",
       "P":"#F03A76",
-      "P2":"#FF90B5"
+      "P2":"#FF90B5",
+      "P3":"#FFD4E2"
     },
 
     fontWeight: {
