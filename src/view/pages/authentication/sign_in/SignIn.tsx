@@ -18,7 +18,6 @@ function SignIn (props:SignInProps){
    )
 }
 
-// w-[400px]
 const style = {
    wrapper: "w-full flex justify-center items-center lg:h-[100vh] bg-[#F6F6F6] lg:justify-between lg:px-[35px] xl:px-[135px]",
    innerWrapper: "w-full flex gap-[30px] justify-center items-center xxs:flex-col lg:flex-row lg:gap-0 lg:justify-between h-auto",

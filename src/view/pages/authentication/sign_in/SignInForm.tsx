@@ -1,9 +1,13 @@
-import {Button, Input, Text,Select} from "../../../base_components";
-import {auth} from "../../../../configs/FirebaseConfig";
-import {signInWithEmailAndPassword, AuthError, UserCredential } from "firebase/auth";
-import React, {useState} from "react";
-import { getDatabase, ref, get } from 'firebase/database';
+import { useState } from 'react';
+import { auth } from '../../../../configs/FirebaseConfig';
+import { signInWithEmailAndPassword, AuthError, UserCredential } from 'firebase/auth';
+import { ref, get } from 'firebase/database';
+import { database } from '../../../../configs/FirebaseConfig';
+import { Button} from '../../../base_components';
 import { useNavigate } from "react-router-dom";
+import {FormAuthen} from "../../../components";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
@@ -16,7 +20,6 @@ function SignInForm() {
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
-         const database = getDatabase();
          const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
          const userData = userDataSnapshot.val();
          if (userData && userData.role === role) {
@@ -31,29 +34,49 @@ function SignInForm() {
          console.error('Error:', errorCode, errorMessage);
       }
    };
-
+   // const validationSchema = Yup.object().shape({
+   //    role: Yup.string().required('Please choose your role'),
+   //    email: Yup.string().email('Invalid email').required('Please enter your email'),
+   //    password: Yup.string().required('Please enter your password'),
+   // });
+   //
+   // const formik = useFormik({
+   //    initialValues: {
+   //       role: role,
+   //       email: email,
+   //       password: password,
+   //    },
+   //    validationSchema,
+   //    onSubmit: handleLogin,
+   // });
+   // const handleEmailBlur = () => {
+   //    formik.setFieldTouched('email', true);
+   // };
+   // const handlePasswordBlur = () => {
+   //    formik.setFieldTouched('password', true);
+   // };
+   // const handleRoleBlur = () => {
+   //    formik.setFieldTouched('role', true);
+   // };
    return (
-      <form className={`${style.wrapper}`} >
-         <Text {...style.text}>
-            LOGIN HERE
-         </Text>
-         <Select {...style.select} value={role} onChange={(event) => setRole(event.target.value)}>
-            <option value="">Choose your role</option>
-            <option value="admin">Admin</option>
-            <option value="planner">Planner</option>
-            <option value="supply_vendor">Supply Vendor</option>
-            <option value="project_contractor">Project Contractor</option>
-         </Select>
-         <Input {...style.inputEmail} label={"Enter email"}
-                value={email}  onChange={(event) => setEmail(event.target.value)}
+      <div className={`${style.wrapper}`}>
+         <FormAuthen
+            title={'LOGIN HERE'}
+            role={role}
+            email={email}
+            password={password}
+            type={"password"}
+            onRoleChange={(event) => setRole(event.target.value)}
+            onEmailChange={(event) => setEmail(event.target.value)}
+            onPasswordChange={(event) => setPassword(event.target.value)}
+            // errors={formik.errors}
+            // touched={formik.touched}
+            // onEmailBlur={handleEmailBlur}
+            // onPasswordBlur={handlePasswordBlur}
+            // onRoleBlur={handleRoleBlur}
          />
-         <Input {...style.inputEmail} label={"Password"}
-                type={"password"} value={password}  onChange={(event) => setPassword(event.target.value)}
-         />
-         <Button type="button" {...style.submitBtn}
-                 label={"Login"} onClick={handleLogin}
-         />
-      </form>
+         <Button type="button" {...style.submitBtn} label={'Login'} onClick={handleLogin} />
+      </div>
    )
 }
 
@@ -62,7 +85,7 @@ const style = {
 
    inputEmail: {
       size: "md" as "md",
-      wrapperStyles:"sm:py-[20px] sm:pr-[170px] lg:pr-[120px] 2xl:pr-[160px]"
+      wrapperStyles:"sm:py-[20px] "
    },
 
    submitBtn: {
