@@ -1,7 +1,7 @@
 import {Routes, Route, Navigate} from 'react-router-dom';
 import {PlanerHome, SystemAdminHome, SupplyVendorHome, ProjectContractorHome, SignIn} from "../view";
 import {LoginStatus,PrivateRoute} from "./index";
-import Test from "./Test";
+import LoginRequire from "./LoginRequire";
 const MainRouting = () => {
    const {isLoggedIn,loading} = LoginStatus();
    const userRole = localStorage.getItem('role');
@@ -12,7 +12,7 @@ const MainRouting = () => {
    return (
       <Routes>
          <Route path="/" element={isAuthenticated ? <Navigate to={`/${userRole}`} replace={true} /> : <Navigate to="/signin" replace={true} />} />
-         <Route path="/hi" element={<Test />} />
+         <Route path="/login-require" element={<LoginRequire />} />
          <Route path="/signin" element={<SignIn />} />
          <Route path="/admin" element={<PrivateRoute element={SystemAdminHome} authenticated={isLoggedIn} role="admin" />} />
          <Route path="/supply_vendor" element={<PrivateRoute element={SupplyVendorHome} authenticated={isLoggedIn} role="supply_vendor" />} />

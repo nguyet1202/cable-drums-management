@@ -8,10 +8,11 @@ type PrivateRouteProps = {
 }
 export const PrivateRoute = ({element: Element, authenticated, role}: PrivateRouteProps) => {
    const userRole = localStorage.getItem('role');
+   console.log(userRole,authenticated)
    return (authenticated && userRole === role ? (
          <Element/>
       ) : (
-         <Navigate to="/hi" replace/>
+         <Navigate to="login-require" replace/>
       )
    );
 };

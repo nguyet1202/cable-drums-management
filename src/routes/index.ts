@@ -1,4 +1,5 @@
 import MainRouting from "./MainRouting";
 import {PrivateRoute} from "./PrivateRoute";
 import LoginStatus from "./LoginStatus";
-export {MainRouting,PrivateRoute,LoginStatus}
+import LoginRequire from "./LoginRequire";
+export {MainRouting,PrivateRoute,LoginStatus,LoginRequire}
