@@ -4,16 +4,21 @@ import {database} from "../../../configs/FirebaseConfig";
 import {get, ref, set,push} from "firebase/database";
 import CreateRequestForm from "./CreateRequestForm";
 import { Modal} from '@mui/material';
-type CreateRequestProps = {
-   onClose: () => void;
-   open: boolean;
-}
-const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
+import {useDispatch, useSelector} from "react-redux";
+import {closeModal} from "../../../store/slices/modalSlice";
+
+const CreateRequest = () => {
    const [contract_id, setContract_id] = useState<string>('');
    const [project_contractor_id, setProject_contractor_id] = useState<string>('');
    const [amount, setAmount] = useState<number>(0);
    const [supply_vendor_id, setSupply_vendor_id] = useState<string>('');
 
+   const dispatch = useDispatch();
+   const showModal = useSelector((state: { modal:
+         { showModal: boolean } }) => state.modal.showModal);
+   const handleCloseModal = () => {
+      dispatch(closeModal());
+   };
    const CreateNewRequest = async () => {
       try {
          if (!contract_id || !project_contractor_id || !amount || !supply_vendor_id) {
@@ -39,7 +44,7 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
          };
 
          await set(newRequestRef, newRequest);
-         onClose();
+         handleCloseModal();
          console.log('success');
       } catch (error) {
          console.error('Error:', error);
@@ -48,8 +53,8 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
 
    return (
       <Modal
-         open={open}
-         onClose={onClose}
+         open={showModal}
+         onClose={handleCloseModal}
          aria-labelledby="modal-title"
          aria-describedby="modal-description"
       >
@@ -70,7 +75,7 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
             <Button
                label="CLOSE"
                {...style.buttonClose}
-               onClick={onClose}
+               onClick={handleCloseModal}
             />
             </div>
          </div>

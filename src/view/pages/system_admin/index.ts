@@ -1,5 +1,5 @@
 import SystemAdminHome from "./SystemAdminHome";
-import AdminLeftSideBar from "./AdminLeftSideBar";
+import AdminMainSideBar from "./AdminMainSideBar";
 import UsersManagement from "./UsersManagement";
 import AddNewUser from "./AddNewUser";
-export {AdminLeftSideBar,SystemAdminHome,UsersManagement,AddNewUser}
+export {AdminMainSideBar,SystemAdminHome,UsersManagement,AddNewUser}

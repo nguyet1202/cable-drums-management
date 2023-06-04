@@ -9,18 +9,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useDispatch,useSelector } from 'react-redux';
+import {closeModal} from "../../../store/slices/modalSlice";
 
-type ContractModalProps = {
-   open: boolean;
-   onClose: () => void;
-   selectedItem: ContractData | null;
-};
-
-const ModalContract = ({open, onClose, selectedItem}: ContractModalProps) => {
+const ModalContract = () => {
+   const selectedItem = useSelector((state: { contract:
+         { selectedItem: ContractData | null } }) => state.contract.selectedItem);
+   const dispatch = useDispatch();
+   const showModal = useSelector((state: { modal:
+         { showModal: boolean } }) => state.modal.showModal);
+   const handleCloseModal = () => {
+      dispatch(closeModal());
+   };
       return (
          <Modal
-            open={open}
-            onClose={onClose}
+            open={showModal}
+            onClose={handleCloseModal}
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
          >
@@ -59,7 +63,7 @@ const ModalContract = ({open, onClose, selectedItem}: ContractModalProps) => {
                         </Table>
                      </TableContainer>
                   )}
-                  <Button label={'Close'} onClick={onClose} size={'xs'} theme={'B'} wrapperStyles={"w-1/5"}></Button>
+                  <Button label={'Close'} onClick={handleCloseModal} size={'xs'} theme={'B'} wrapperStyles={"w-1/5"}></Button>
                </div>
             </div>
          </Modal>

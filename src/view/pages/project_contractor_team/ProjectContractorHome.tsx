@@ -1,11 +1,9 @@
-import {getAuth, signOut} from "firebase/auth";
-import {ContractorRequest,ContractorLeftSideBar} from "./index";
+import {ContractorRequest} from "./index";
 import React from "react";
 
 const ProjectContractorHome =()=>{
    return(
-      <main className={`flex flex-row w-full h-[100vh]`}>
-         <ContractorLeftSideBar/>
+      <main className={`flex flex-row w-full `}>
          <ContractorRequest/>
       </main>
    )

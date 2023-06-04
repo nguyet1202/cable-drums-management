@@ -1,29 +1,22 @@
-import {Button, Image} from "../base_components";
-import {Text} from "../base_components";
+import {Button, Image} from "../../base_components";
+import {Text} from "../../base_components";
 import { FiUsers } from "react-icons/fi";
-import {ButtonLogout} from "../components";
+import {ButtonLogout} from "../../components";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-const LeftLayout=()=>{
-   const navigate = useNavigate();
+type LeftLayoutProps={
+   label:string,
+   onClick?: () => void,
+}
+const LeftLayout=(props:LeftLayoutProps)=>{
 
-   const HandleContract =()=>{
-      navigate(`/contract`, { replace: true });
-   }
-   const HandleRequest =()=>{
-      navigate(`/allrequest`, { replace: true });
-   }
    return(
       <section className={`${style.wrapper}`} >
          <Text {...style.text}>
             WELCOME BACK
          </Text>
          <div className={`${style.buttonNavigate.divWrapper}`}>
-            <Button iconLeft={<FiUsers size={25}/>} label={"Contract"} onClick={HandleContract}
-                    {...style.buttonNavigate.button}
-            />
-            <Button iconLeft={<FiUsers size={25}/>} label={"Request"} onClick={HandleRequest}
+            <Button iconLeft={<FiUsers size={25}/>} label={props.label} onClick={props.onClick}
                     {...style.buttonNavigate.button}
             />
             <ButtonLogout/>

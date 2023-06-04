@@ -1,4 +1,4 @@
-import LeftLayout from "./LeftLayout";
+import MainLeftLayout from "./MainLeftLayout";
 import MainLayout from "./MainLayout";
 import Header from "./Header";
-export {LeftLayout,MainLayout,Header}
+export {MainLeftLayout,MainLayout,Header}

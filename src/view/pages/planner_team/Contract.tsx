@@ -1,29 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { child, get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import {ContractList} from "../../components";
 import {ModalContract} from "../../components";
-type ContractData = {
-   id?:string;
-   start_date: string;
-   end_date: string;
-   contract_amount: number;
-   supply_vendor_id: string;
-   teamname:string;
-   phonenumbers:number;
-   email:string
-};
+import { useDispatch } from 'react-redux';
+import {setSelectedItem,setData,ContractData} from "../../../store/slices/contractSlice";
+import {openModal} from "../../../store/slices/modalSlice";
+
 const Contract = () => {
-   const [data, setData] = useState<{ [key: string]: ContractData }>({});
-   const [selectedItem, setSelectedItem] = useState<ContractData | null>(null);
-   const [modalOpen, setModalOpen] = useState<boolean>(false);
+   const dispatch = useDispatch();
 
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `contracts`))
          .then((snapshot) => {
             if (snapshot.exists()) {
-               setData(snapshot.val());
+               dispatch(setData(snapshot.val()));
             } else {
                throw new Error("No data available");
             }
@@ -43,7 +35,7 @@ const Contract = () => {
             const vendorData = vendorSnapshot.val();
 
             if (vendorSnapshot.exists()) {
-               setSelectedItem({
+               dispatch(setSelectedItem({
                   start_date: contractData.start_date,
                   end_date: contractData.end_date,
                   contract_amount: contractData.contract_amount,
@@ -51,7 +43,7 @@ const Contract = () => {
                   teamname: vendorData.teamname,
                   phonenumbers: vendorData.phonenumbers,
                   email: vendorData.email
-               });
+               }));
             }
          } else {
             throw new Error("Contract not found");
@@ -63,19 +55,15 @@ const Contract = () => {
 
    const handleOpenModal = (item: ContractData) => {
       let id = item.id || "";
-      setSelectedItem(item);
+      dispatch(setSelectedItem(item));
       fetchSupplyVendorInfo(id);
-      setModalOpen(true);
-   };
-
-   const handleCloseModal = () => {
-      setModalOpen(false);
+      dispatch(openModal(true));
    };
 
    return (
       <div className={`${style.wrapper}`}>
-         <ContractList data={data} handleOpenModal={handleOpenModal} />
-         <ModalContract open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
+         <ContractList handleOpenModal={handleOpenModal} />
+         <ModalContract/>
       </div>
    );
 };

@@ -1,5 +1,5 @@
 import {Modal} from '@mui/material';
-import {RequestData} from "../../pages/planner_team/Request";
+import {RequestData} from "../../../store/slices/requestSlice";
 import {Button, Text} from "../../base_components";
 import {styled} from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -9,18 +9,21 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-type ContractModalProps = {
-   open: boolean;
-   onClose: () => void;
-   selectedItem: RequestData | null;
-};
-
-const ModalRequestDetail = ({open, onClose, selectedItem}: ContractModalProps) => {
+import {useDispatch, useSelector} from "react-redux";
+import {closeModal} from "../../../store/slices/modalSlice";
+const ModalRequestDetail = () => {
+   const selectedItem = useSelector((state: { request:
+         { selectedItem: RequestData | null } }) => state.request.selectedItem);
+   const dispatch = useDispatch();
+   const showModal = useSelector((state: { modal:
+         { showModal: boolean } }) => state.modal.showModal);
+   const handleCloseModal = () => {
+      dispatch(closeModal());
+   };
       return (
          <Modal
-            open={open}
-            onClose={onClose}
+            open={showModal}
+            onClose={handleCloseModal}
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
          >
@@ -99,7 +102,7 @@ const ModalRequestDetail = ({open, onClose, selectedItem}: ContractModalProps) =
                         </Table>
                      </TableContainer>
                   )}
-                  <Button label={'Close'} onClick={onClose} size={'xs'} theme={'B'} wrapperStyles={"w-1/5"}></Button>
+                  <Button label={'Close'} onClick={handleCloseModal} size={'xs'} theme={'B'} wrapperStyles={"w-1/5"}></Button>
                </div>
             </div>
          </Modal>

@@ -1,43 +1,29 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { child, get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
 import {CreateRequest} from "./index";
-type RequestData = {
-   contract_id: string;
-   project_contractor_id: string;
-   amount: number;
-   supply_vendor_id: string;
-   status:string;
-   teamname:string;
-   phonenumbers:number;
-   email:string,
-   project_contractor_name:string,
-   project_contractor_phone:string,
-   project_contractor_email:string,
-};
+import { useDispatch } from 'react-redux';
+import {setSelectedItemRequest,setDataRequest,RequestData} from "../../../store/slices/requestSlice";
+import {openModal} from "../../../store/slices/modalSlice";
 const Request = () => {
-   const [data, setData] = useState<{ [key: string]: RequestData } | null>(null);
-   const [selectedItem, setSelectedItem] = useState<RequestData | null>(null);
-   const [modalOpen, setModalOpen] = useState<boolean>(false);
-   const [showModal, setShowModal] = useState<boolean>(false);
-
+   const dispatch = useDispatch();
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `withdraw_requests`))
          .then((snapshot) => {
             if (snapshot.exists()) {
-               setData(snapshot.val());
+               dispatch(setDataRequest(snapshot.val()));
             } else {
-               setData(snapshot.val());
+               dispatch(setDataRequest(snapshot.val()));
             }
          })
          .catch((error) => {
             throw new Error(error);
          });
-   }, [data]);
+   }, [setDataRequest]);
 
-   const fetchSupplyVendorInfo = async (contract_id: string) => {
+   const fetchDetail = async (contract_id: string) => {
       try {
          const contractSnapshot = await get(ref(database, `withdraw_requests/${contract_id}`));
          const contractData = contractSnapshot.val();
@@ -50,7 +36,7 @@ const Request = () => {
                const ProjectorData = ProjectorSnapshot.val();
 
                if (vendorSnapshot.exists()) {
-                  setSelectedItem({
+                  dispatch(setSelectedItemRequest({
                      contract_id: contractData.contract_id,
                      project_contractor_id: contractData.project_contractor_id,
                      project_contractor_name: ProjectorData.teamname,
@@ -62,7 +48,7 @@ const Request = () => {
                      teamname: vendorData.teamname,
                      phonenumbers: vendorData.phonenumbers,
                      email: vendorData.email
-                  });
+                  }));
                }
             }
          } else {
@@ -74,24 +60,16 @@ const Request = () => {
    };
 
    const handleOpenModal = (item: RequestData) => {
-      setSelectedItem(item);
-      fetchSupplyVendorInfo(item.contract_id);
-      setModalOpen(true);
+      dispatch(setSelectedItemRequest(item));
+      fetchDetail(item.contract_id);
+      dispatch(openModal(true));
    };
-
-   const handleCloseModal = () => {
-      setModalOpen(false);
-   };
-   const openModal = () => {
-      setShowModal(true);
-   };
-
    return (
       <div className={`${style.wrapper}`}>
-         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal} />
-         <RequestList data={data ?? {}} handleOpenModal={handleOpenModal} />
-         <ModalRequestDetail open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
-         <CreateRequest  open={showModal} onClose={() => setShowModal(false)} />
+         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} />
+         <RequestList handleOpenModal={handleOpenModal} />
+         <ModalRequestDetail />
+         <CreateRequest />
 
       </div>
    );

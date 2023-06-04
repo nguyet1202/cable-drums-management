@@ -1,15 +1,18 @@
-import {Button, Image} from "../../base_components";
-import {Text} from "../../base_components";
+import {Button, Image} from "../base_components";
+import {Text} from "../base_components";
 import { FiUsers } from "react-icons/fi";
-import {ButtonLogout} from "../../components";
+import {ButtonLogout} from "../components";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ContractorLeftSideBar=()=>{
+const MainLeftLayout=()=>{
    const navigate = useNavigate();
 
-   const HandleClick =()=>{
-      navigate(`/contractor-request`, { replace: true });
+   const HandleContract =()=>{
+      navigate(`/contract`, { replace: true });
+   }
+   const HandleRequest =()=>{
+      navigate(`/allrequest`, { replace: true });
    }
    return(
       <section className={`${style.wrapper}`} >
@@ -17,7 +20,10 @@ const ContractorLeftSideBar=()=>{
             WELCOME BACK
          </Text>
          <div className={`${style.buttonNavigate.divWrapper}`}>
-            <Button iconLeft={<FiUsers size={25}/>} label={"Request"} onClick={HandleClick}
+            <Button iconLeft={<FiUsers size={25}/>} label={"Contract"} onClick={HandleContract}
+                    {...style.buttonNavigate.button}
+            />
+            <Button iconLeft={<FiUsers size={25}/>} label={"Request"} onClick={HandleRequest}
                     {...style.buttonNavigate.button}
             />
             <ButtonLogout/>
@@ -43,4 +49,4 @@ const style={
       }
    }
 }
-export default ContractorLeftSideBar
+export default MainLeftLayout
