@@ -38,7 +38,6 @@ const style = {
 }
 
 const ButtonTheme = {
-
    primary: {
       wrapper: "bg-W rounded text-P rounded-lg shadow-xl",
       text: {
@@ -62,6 +61,13 @@ const ButtonTheme = {
    },
    B:{
       wrapper: " bg-P rounded rounded-lg",
+      text: {
+         color:"white" as "white",
+         styles:""
+      }
+   },
+   C:{
+      wrapper: " text-GR rounded rounded-lg",
       text: {
          color:"white" as "white",
          styles:""

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { child, get, ref } from "firebase/database";
+import {child, equalTo, get, orderByChild, query, ref} from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
-import {CreateRequest} from "./index";
 type RequestData = {
+   id?:string;
    contract_id: string;
    project_contractor_id: string;
    amount: number;
@@ -16,34 +16,39 @@ type RequestData = {
    project_contractor_phone:string,
    project_contractor_email:string,
 };
-const Request = () => {
-   const [data, setData] = useState<{ [key: string]: RequestData } | null>(null);
+const SupplyVendorRequest = () => {
+   const [data, setData] = useState<{ [key: string]: RequestData }>({});
    const [selectedItem, setSelectedItem] = useState<RequestData | null>(null);
    const [modalOpen, setModalOpen] = useState<boolean>(false);
-   const [showModal, setShowModal] = useState<boolean>(false);
-
+   const userID = localStorage.getItem('userID');
    useEffect(() => {
-      const dbRef = ref(database);
-      get(child(dbRef, `withdraw_requests`))
-         .then((snapshot) => {
-            if (snapshot.exists()) {
-               setData(snapshot.val());
-            } else {
-               setData(snapshot.val());
-            }
-         })
-         .catch((error) => {
-            throw new Error(error);
-         });
-   }, [data]);
-
-   const fetchSupplyVendorInfo = async (contract_id: string) => {
+   const fetchData = async () => {
       try {
-         const contractSnapshot = await get(ref(database, `withdraw_requests/${contract_id}`));
+         const userDataSnapshot = await get(ref(database, `users/${userID}`));
+         const userData = userDataSnapshot.val();
+         const supply_vendor_id = userData.supply_vendor_id;
+         const requestsRef = ref(database, "withdraw_requests");
+         const requestsQuery = query(requestsRef, orderByChild("supply_vendor_id"), equalTo(supply_vendor_id));
+         const requestsSnapshot = await get(requestsQuery);
+         const contractsData = requestsSnapshot.val();
+         console.log()
+         setData(contractsData);
+      } catch (error) {
+         console.error('Lỗi khi truy vấn dữ liệu:', error);
+      }
+   };
+
+   fetchData();
+}, [userID]);
+
+   const fetchSupplyVendorInfo = async (id: string) => {
+      try {
+         const contractSnapshot = await get(ref(database, `withdraw_requests/${id}`));
          const contractData = contractSnapshot.val();
+         console.log('có tồn tại không em',contractData)
 
          if (contractSnapshot.exists()) {
-            const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendor_id}`));
+            const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.contract_id}`));
             const vendorData = vendorSnapshot.val();
             if (vendorSnapshot.exists()) {
                const ProjectorSnapshot = await get(ref(database, `project_contractors/${contractData.project_contractor_id}`));
@@ -74,25 +79,20 @@ const Request = () => {
    };
 
    const handleOpenModal = (item: RequestData) => {
+      let id = item.id || "";
       setSelectedItem(item);
-      fetchSupplyVendorInfo(item.contract_id);
+      fetchSupplyVendorInfo(id);
       setModalOpen(true);
    };
 
    const handleCloseModal = () => {
       setModalOpen(false);
    };
-   const openModal = () => {
-      setShowModal(true);
-   };
 
    return (
       <div className={`${style.wrapper}`}>
-         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal} />
-         <RequestList data={data ?? {}} handleOpenModal={handleOpenModal} />
+         <RequestList data={data}  handleOpenModal={handleOpenModal}  />
          <ModalRequestDetail open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
-         <CreateRequest  open={showModal} onClose={() => setShowModal(false)} />
-
       </div>
    );
 };
@@ -106,5 +106,5 @@ const style = {
    },
    btnCreate: "left-[0%]",
 }
-export default Request;
+export default SupplyVendorRequest;
 export {type RequestData}

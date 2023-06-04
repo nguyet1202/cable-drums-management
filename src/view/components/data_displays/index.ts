@@ -6,4 +6,9 @@ import ModalContract from "./ModalContract";
 import InforUser from "./InforUser";
 import Notification from "./Notification";
 import ModalRequestDetail from "./ModalRequestDetail";
-export {ButtonLogout,ModalRequestDetail,CreateNewBtn,FormAuthen,ContractList,ModalContract,InforUser,Notification}
+import RequestList from "./RequestList";
+export {
+   ButtonLogout,ModalRequestDetail,
+   CreateNewBtn,FormAuthen,ContractList,
+   ModalContract,InforUser,Notification,RequestList
+}

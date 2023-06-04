@@ -1,43 +1,38 @@
 import { useState, useEffect } from "react";
-import { child, get, ref } from "firebase/database";
+import { child, get, ref, query, equalTo, orderByChild } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
-import {ContractList} from "../../components";
-import {ModalContract} from "../../components";
-type ContractData = {
-   id?:string;
-   start_date: string;
-   end_date: string;
-   contract_amount: number;
-   supply_vendor_id: string;
-   teamname:string;
-   phonenumbers:number;
-   email:string
-};
-const Contract = () => {
+import { ContractList, ModalContract } from "../../components";
+import {ContractData} from "../planner_team";
+
+const SupplyTeamContract = () => {
    const [data, setData] = useState<{ [key: string]: ContractData }>({});
    const [selectedItem, setSelectedItem] = useState<ContractData | null>(null);
    const [modalOpen, setModalOpen] = useState<boolean>(false);
+   const userID = localStorage.getItem('userID');
 
    useEffect(() => {
-      const dbRef = ref(database);
-      get(child(dbRef, `contracts`))
-         .then((snapshot) => {
-            if (snapshot.exists()) {
-               setData(snapshot.val());
-            } else {
-               throw new Error("No data available");
-            }
-         })
-         .catch((error) => {
-            throw new Error(error);
-         });
-   }, []);
+      const fetchData = async () => {
+         try {
+            const userDataSnapshot = await get(ref(database, `users/${userID}`));
+            const userData = userDataSnapshot.val();
+            const supply_vendor_id = userData.supply_vendor_id;
+            const contractsRef = ref(database, "contracts");
+            const contractsQuery = query(contractsRef, orderByChild("supply_vendor_id"), equalTo(supply_vendor_id));
+            const contractsSnapshot = await get(contractsQuery);
+            const contractsData = contractsSnapshot.val();
+            setData(contractsData);
+         } catch (error) {
+            console.error('Lỗi khi truy vấn dữ liệu:', error);
+         }
+      };
+
+      fetchData();
+   }, [userID]);
 
    const fetchSupplyVendorInfo = async (id: string) => {
       try {
          const contractSnapshot = await get(ref(database, `contracts/${id}`));
          const contractData = contractSnapshot.val();
-
          if (contractSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendor_id}`));
             const vendorData = vendorSnapshot.val();
@@ -73,21 +68,11 @@ const Contract = () => {
    };
 
    return (
-      <div className={`${style.wrapper}`}>
+      <div className="w-full flex flex-col bg-W 2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3">
          <ContractList data={data} handleOpenModal={handleOpenModal} />
          <ModalContract open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
       </div>
    );
 };
 
-const style = {
-   wrapper: "w-full flex flex-col bg-W 2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3 ",
-   button: {
-      size: "xs" as "xs",
-      theme: "A" as "A",
-      wrapperStyles: "py-0 px-0 left-[8%]"
-   },
-   btnCreate: "left-[0%]",
-}
-export default Contract;
-export {type ContractData}
+export default SupplyTeamContract;
