@@ -1,2 +1,3 @@
 import SupplyVendorHome from "./SupplyVendorHome";
-export {SupplyVendorHome}
+import SupplyTeamContract from "./SupplyTeamContract";
+export {SupplyVendorHome,SupplyTeamContract}

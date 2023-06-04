@@ -15,10 +15,26 @@ const ButtonLogout =()=>{
       }
    };
    return(
-      <div>
-         <Button onClick={handleSignOut} iconLeft={<FiLogOut size={25}/>} size={"base"} label={"Logout" }/>
+      <div className={style.buttonNavigate.divWrapper}>
+         <Button onClick={handleSignOut} iconLeft={<FiLogOut size={25}/>}  label={"Logout" } {...style.buttonNavigate.button}/>
       </div>
 
    )
+}
+const style={
+   wrapper:" bg-B2 h-[100vh] justify-between flex flex-col gap-10 px-16 py-20 ",
+   text:{
+      size:"2xl" as "2xl",
+      weight:"extrabold" as "extrabold",
+      color:"pink" as "pink",
+      font:"A" as "A",
+      wrapperStyles:"text-center"
+   },
+   buttonNavigate:{
+      divWrapper:"flex flex-col gap-8 pt-5 pb-6",
+      button:{
+         size:"base" as "base",
+      }
+   }
 }
 export default ButtonLogout

@@ -1,24 +1,12 @@
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-const PlanerHome =()=>{
-   const handleSignOut = async () => {
-      try {
-         const authInstance = getAuth();
-         await signOut(authInstance);
-         console.log('Sign out successful');
-      } catch (error) {
-         console.error('Sign out error:', error);
-      }
-   };
+import React from "react";
+import {Contract} from "./index";
+
+const PlanerHome = () => {
    return (
-      <>
-         Planner Team
-         <>
-            <p>{`Signed In as `}</p>
-            <button onClick={handleSignOut}>Sign Out</button>
-         </>
-      </>
+      <main className={`flex flex-row w-full `}>
+         <Contract/>
+      </main>
+   );
+};
 
-   )
-
-}
-export default PlanerHome
+export default PlanerHome;

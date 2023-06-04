@@ -8,8 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {FaTrashAlt} from "react-icons/fa";
 import {useState, useEffect} from "react";
-import {child, get, getDatabase, ref, remove} from "firebase/database";
-import {database, auth} from "../../../configs/FirebaseConfig";
+import {child, get, ref, remove} from "firebase/database";
+import {database} from "../../../configs/FirebaseConfig";
 import {CreateNewBtn} from "../../components";
 import {AddNewUser} from "./index";
 
@@ -52,8 +52,8 @@ const UsersManagement = () => {
    };
    return (
       <div className={`${style.wrapper}`}>
-         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal}/>
-         {showModal && <AddNewUser closeModal={() => setShowModal(false)}/>}
+         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal} />
+         <AddNewUser  open={showModal} onClose={() => setShowModal(false)} />
          <TableContainer component={Paper}>
             <Table>
                <TableHead>

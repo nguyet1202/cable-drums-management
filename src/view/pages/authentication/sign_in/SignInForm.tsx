@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useId, useState} from 'react';
 import { auth } from '../../../../configs/FirebaseConfig';
 import { signInWithEmailAndPassword, AuthError, UserCredential } from 'firebase/auth';
 import { ref, get } from 'firebase/database';
@@ -22,6 +22,7 @@ function SignInForm() {
          const user = userCredential.user;
          const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
          const userData = userDataSnapshot.val();
+
          if (userData && userData.role === role) {
             localStorage.setItem('role', role);
             navigate(`/${role}`, { replace: true });

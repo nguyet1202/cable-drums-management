@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogActions } from '@mui/material';
 import { FormAuthen } from '../../components';
 import { Button } from "../../base_components";
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import { auth, database } from "../../../configs/FirebaseConfig";
 import { ref, set } from "firebase/database";
-
+import { Modal} from '@mui/material';
 type AddNewUserProps = {
-   closeModal: () => void;
+   onClose: () => void;
+   open: boolean;
 }
 
 type RegisterRole = "admin" | "supply_vendor" | "planner" | "project_contractor";
 
-const AddNewUser = ({ closeModal }: AddNewUserProps,props:RegisterRole) => {
+const AddNewUser = ({  open, onClose }: AddNewUserProps) => {
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
    const [role, setRole] = useState<RegisterRole>( 'admin' );
 
-   const handleCloseModal = () => {
-      closeModal();
-   };
-
-   const handleSignUp = async () => {
+   const AddUser = async () => {
       try {
          if (!email || !password || !role) {
             throw new Error("Please enter your email, password, and role to sign up");
@@ -33,18 +29,22 @@ const AddNewUser = ({ closeModal }: AddNewUserProps,props:RegisterRole) => {
             password: password,
             role: role
          });
-         closeModal();
+         onClose();
          console.log('succes')
       } catch (error) {
          console.error('Error:', error);
-
       }
    };
 
 
    return (
-      <Dialog open onClose={handleCloseModal}>
-         <DialogContent className={style.modalWrapper}>
+      <Modal
+         open={open}
+         onClose={onClose}
+         aria-labelledby="modal-title"
+         aria-describedby="modal-description"
+      >
+         <div className={style.modalWrapper}>
             <div className={style.modalContent}>
                <FormAuthen
                   type={"text"}
@@ -56,15 +56,15 @@ const AddNewUser = ({ closeModal }: AddNewUserProps,props:RegisterRole) => {
                   onEmailChange={(event) => setEmail(event.target.value)}
                   onPasswordChange={(event) => setPassword(event.target.value)}
                />
-               <Button type="button" {...style.submitBtn} label="Register" onClick={handleSignUp} />
+               <Button type="button" {...style.submitBtn} label="Register" onClick={AddUser} />
                <Button
                   label="CLOSE"
                   {...style.buttonClose}
-                  onClick={handleCloseModal}
+                  onClick={onClose}
                />
             </div>
-         </DialogContent>
-      </Dialog>
+         </div>
+      </Modal>
    );
 }
 

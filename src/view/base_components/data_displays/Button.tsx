@@ -1,4 +1,4 @@
-import {ButtonHTMLAttributes, DetailedHTMLProps, ReactElement, ReactNode} from "react"
+import {ButtonHTMLAttributes, DetailedHTMLProps, ReactElement} from "react"
 import {Text} from "../data_displays"
 import {IconType} from "react-icons";
 
@@ -24,6 +24,7 @@ function Button(props: ButtonProps) {
             size={size.text.size}
             weight={size.text.weight}
             color={theme.text.color}
+            wrapperStyles={theme.text.styles}
          >
             {props.label}
          </Text>
@@ -37,6 +38,7 @@ const style = {
 }
 
 const ButtonTheme = {
+
    primary: {
       wrapper: "bg-W rounded text-P rounded-lg shadow-xl",
       text: {
@@ -64,12 +66,20 @@ const ButtonTheme = {
          color:"white" as "white",
          styles:""
       }
-   }
+   },
+   NoneBtn: {
+      wrapper: "",
+      text: {
+         color:"black" as "black",
+         size:"xs" as "xs",
+         styles:"w-[500px]"
+      }
+   },
 }
 
 const ButtonSize = {
    xs: {
-      wrapper: "w-full px-[0px] py-[12px] ",
+      wrapper: " px-[0px] py-[12px] ",
       text: {
          size: "sm" as "sm",
          weight: "normal" as "normal"
@@ -83,7 +93,7 @@ const ButtonSize = {
       },
    },
    base: {
-      wrapper: "w-full px-[100px] py-[12px]",
+      wrapper: " px-[100px] py-[12px]",
       text: {
          size: "lg" as "lg",
          weight: "normal" as "normal"

@@ -60,6 +60,7 @@ const TextWeight = {
 const TextColor = {
    blue: "text-B1",
    white: "text-W",
+   white2:"text-W2",
    gray: "text-G",
    black:"text-BB",
    pink:"text-P",
