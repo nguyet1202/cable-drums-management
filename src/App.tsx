@@ -1,11 +1,9 @@
 import React from 'react';
-
+import {SignIn} from "./view";
 function App() {
-  return (
-    <div className="App">
-      <p>hihi</p>
-    </div>
-  );
+   return (
+      <SignIn/>
+   );
 }
 
 export default App;
