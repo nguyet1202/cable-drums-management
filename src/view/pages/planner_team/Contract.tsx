@@ -4,6 +4,7 @@ import { database } from "../../../configs/FirebaseConfig";
 import {ContractList} from "../../components";
 import {ModalContract} from "../../components";
 type ContractData = {
+   id?:string;
    start_date: string;
    end_date: string;
    contract_amount: number;
@@ -32,9 +33,9 @@ const Contract = () => {
          });
    }, []);
 
-   const fetchSupplyVendorInfo = async (supplyVendorId: string) => {
+   const fetchSupplyVendorInfo = async (id: string) => {
       try {
-         const contractSnapshot = await get(ref(database, `contracts/${supplyVendorId}`));
+         const contractSnapshot = await get(ref(database, `contracts/${id}`));
          const contractData = contractSnapshot.val();
 
          if (contractSnapshot.exists()) {
@@ -61,8 +62,9 @@ const Contract = () => {
    };
 
    const handleOpenModal = (item: ContractData) => {
+      let id = item.id || "";
       setSelectedItem(item);
-      fetchSupplyVendorInfo(item.supply_vendor_id);
+      fetchSupplyVendorInfo(id);
       setModalOpen(true);
    };
 

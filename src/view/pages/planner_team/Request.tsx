@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { child, get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
-import RequestList from "../../components/data_displays/RequestList";
-import {CreateNewBtn, ModalRequestDetail} from "../../components";
+import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
+import {CreateRequest} from "./index";
 type RequestData = {
    contract_id: string;
    project_contractor_id: string;
@@ -17,7 +17,7 @@ type RequestData = {
    project_contractor_email:string,
 };
 const Request = () => {
-   const [data, setData] = useState<{ [key: string]: RequestData }>({});
+   const [data, setData] = useState<{ [key: string]: RequestData } | null>(null);
    const [selectedItem, setSelectedItem] = useState<RequestData | null>(null);
    const [modalOpen, setModalOpen] = useState<boolean>(false);
    const [showModal, setShowModal] = useState<boolean>(false);
@@ -29,24 +29,24 @@ const Request = () => {
             if (snapshot.exists()) {
                setData(snapshot.val());
             } else {
-               throw new Error("No data available");
+               setData(snapshot.val());
             }
          })
          .catch((error) => {
             throw new Error(error);
          });
-   }, []);
+   }, [data]);
 
-   const fetchSupplyVendorInfo = async (supplyVendorId: string) => {
+   const fetchSupplyVendorInfo = async (contract_id: string) => {
       try {
-         const contractSnapshot = await get(ref(database, `withdraw_requests/${supplyVendorId}`));
+         const contractSnapshot = await get(ref(database, `withdraw_requests/${contract_id}`));
          const contractData = contractSnapshot.val();
 
          if (contractSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendor_id}`));
             const vendorData = vendorSnapshot.val();
             if (vendorSnapshot.exists()) {
-               const ProjectorSnapshot = await get(ref(database, `supply_vendors/${contractData.project_contractor_id}`));
+               const ProjectorSnapshot = await get(ref(database, `project_contractors/${contractData.project_contractor_id}`));
                const ProjectorData = ProjectorSnapshot.val();
 
                if (vendorSnapshot.exists()) {
@@ -75,7 +75,7 @@ const Request = () => {
 
    const handleOpenModal = (item: RequestData) => {
       setSelectedItem(item);
-      fetchSupplyVendorInfo(item.supply_vendor_id);
+      fetchSupplyVendorInfo(item.contract_id);
       setModalOpen(true);
    };
 
@@ -89,8 +89,10 @@ const Request = () => {
    return (
       <div className={`${style.wrapper}`}>
          <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal} />
-         <RequestList data={data}  handleOpenModal={handleOpenModal}  />
+         <RequestList data={data ?? {}} handleOpenModal={handleOpenModal} />
          <ModalRequestDetail open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
+         <CreateRequest  open={showModal} onClose={() => setShowModal(false)} />
+
       </div>
    );
 };
