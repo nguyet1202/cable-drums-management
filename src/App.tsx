@@ -1,8 +1,12 @@
 import React from 'react';
-import {SignIn} from "./view";
+import {BrowserRouter} from 'react-router-dom';
+import {MainRouting} from "./routes";
+
 function App() {
    return (
-      <SignIn/>
+      <BrowserRouter>
+         <MainRouting/>
+      </BrowserRouter>
    );
 }
 

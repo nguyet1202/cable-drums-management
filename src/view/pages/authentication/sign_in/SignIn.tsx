@@ -18,10 +18,9 @@ function SignIn (props:SignInProps){
    )
 }
 
-// w-[400px]
 const style = {
-   wrapper: "w-full flex justify-center items-center h-[100vh] bg-[#F6F6F6] lg:justify-between lg:px-[35px] xl:px-[135px]",
-   innerWrapper: "w-full flex gap-[30px] justify-center items-center xxs:flex-col lg:flex-row lg:gap-0 lg:justify-between",
+   wrapper: "w-full flex justify-center items-center lg:h-[100vh] bg-[#F6F6F6] lg:justify-between lg:px-[35px] xl:px-[135px]",
+   innerWrapper: "w-full flex gap-[30px] justify-center items-center xxs:flex-col lg:flex-row lg:gap-0 lg:justify-between h-auto",
    image:{
       width:"w-[200px]",
       wrapperStyles:" xs:w-[250px] sm:w-[300px] md:w-[350px] xl:w-[400px] 2xl:w-[450px]"

@@ -1,20 +1,18 @@
-import {Button, Input, Text} from "../../../base_components";
-import {auth} from "../../../../configs/FirebaseConfig";
-import {signInWithEmailAndPassword, AuthError, UserCredential } from "firebase/auth";
-import React, {useState,ChangeEvent} from "react";
-import {Select} from "../../../base_components";
-
-
+import { useState } from 'react';
+import { auth } from '../../../../configs/FirebaseConfig';
+import { signInWithEmailAndPassword, AuthError, UserCredential } from 'firebase/auth';
+import { ref, get } from 'firebase/database';
+import { database } from '../../../../configs/FirebaseConfig';
+import { Button} from '../../../base_components';
+import { useNavigate } from "react-router-dom";
+import {FormAuthen} from "../../../components";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
-   console.log(email)
-   const handleEmailChange = (event:ChangeEvent<HTMLInputElement>) => {
-      setEmail(event.target.value);
-   };
-   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setPassword(event.target.value);
-   };
+   const [role, setRole] = useState<string>('');
+   const navigate = useNavigate();
    const handleLogin = async () => {
       try {
          if (!email || !password) {
@@ -22,36 +20,63 @@ function SignInForm() {
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
-         console.log('Success!', user);
+         const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
+         const userData = userDataSnapshot.val();
+         if (userData && userData.role === role) {
+            localStorage.setItem('role', role);
+            navigate(`/${role}`, { replace: true });
+         } else {
+            throw new Error("Invalid user role");
+         }
       } catch (error) {
          const errorCode = (error as AuthError).code;
          const errorMessage = (error as AuthError).message;
          console.error('Error:', errorCode, errorMessage);
       }
    };
-
+   // const validationSchema = Yup.object().shape({
+   //    role: Yup.string().required('Please choose your role'),
+   //    email: Yup.string().email('Invalid email').required('Please enter your email'),
+   //    password: Yup.string().required('Please enter your password'),
+   // });
+   //
+   // const formik = useFormik({
+   //    initialValues: {
+   //       role: role,
+   //       email: email,
+   //       password: password,
+   //    },
+   //    validationSchema,
+   //    onSubmit: handleLogin,
+   // });
+   // const handleEmailBlur = () => {
+   //    formik.setFieldTouched('email', true);
+   // };
+   // const handlePasswordBlur = () => {
+   //    formik.setFieldTouched('password', true);
+   // };
+   // const handleRoleBlur = () => {
+   //    formik.setFieldTouched('role', true);
+   // };
    return (
-      <form className={`${style.wrapper}`} >
-         <Text {...style.text}>
-            LOGIN HERE
-         </Text>
-         <Select {...style.select}>
-            <option value="option1">Choose your role</option>
-            <option value="option2">Admin</option>
-            <option value="option3">Planner</option>
-            <option value="option3">Supply Vendor</option>
-            <option value="option3">Project Contractor</option>
-         </Select>
-         <Input {...style.inputEmail} label={"Enter email"}
-                value={email} onChange={handleEmailChange}
+      <div className={`${style.wrapper}`}>
+         <FormAuthen
+            title={'LOGIN HERE'}
+            role={role}
+            email={email}
+            password={password}
+            type={"password"}
+            onRoleChange={(event) => setRole(event.target.value)}
+            onEmailChange={(event) => setEmail(event.target.value)}
+            onPasswordChange={(event) => setPassword(event.target.value)}
+            // errors={formik.errors}
+            // touched={formik.touched}
+            // onEmailBlur={handleEmailBlur}
+            // onPasswordBlur={handlePasswordBlur}
+            // onRoleBlur={handleRoleBlur}
          />
-         <Input {...style.inputEmail} label={"Password"}
-                type={"password"} value={password} onChange={handlePasswordChange}
-         />
-         <Button type="button" {...style.submitBtn}
-                 label={"Login"} onClick={handleLogin}
-         />
-      </form>
+         <Button type="button" {...style.submitBtn} label={'Login'} onClick={handleLogin} />
+      </div>
    )
 }
 
@@ -60,7 +85,7 @@ const style = {
 
    inputEmail: {
       size: "md" as "md",
-      wrapperStyles:"sm:py-[20px] sm:pr-[170px] lg:pr-[120px] 2xl:pr-[160px]"
+      wrapperStyles:"sm:py-[20px] "
    },
 
    submitBtn: {

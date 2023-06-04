@@ -10,6 +10,7 @@ type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HT
    iconLeft?: ReactElement<IconType>
    onClick?: () => void
    wrapperStyles?:string;
+   wrapperIconStyles?:string;
 }
 
 function Button(props: ButtonProps) {
@@ -18,7 +19,7 @@ function Button(props: ButtonProps) {
 
    return (
       <button onClick={props.onClick} className={`${style.wrapper} ${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}type={props.type}>
-         <span className={`${style.iconLeft}`}>{props.iconLeft}</span>
+         <span className={`${style.iconLeft} ${props.wrapperIconStyles}`}>{props.iconLeft}</span>
          <Text
             size={size.text.size}
             weight={size.text.weight}
@@ -37,7 +38,7 @@ const style = {
 
 const ButtonTheme = {
    primary: {
-      wrapper: "rounded border",
+      wrapper: "bg-W rounded text-P rounded-lg shadow-xl",
       text: {
          color:"black" as "black",
          styles:""
@@ -49,28 +50,42 @@ const ButtonTheme = {
          color:"white" as "white",
          styles:""
       }
+   },
+   A:{
+      wrapper: " rounded text-P rounded-lg",
+      text: {
+         color:"black" as "black",
+         styles:""
+      }
+   },
+   B:{
+      wrapper: " bg-P rounded rounded-lg",
+      text: {
+         color:"white" as "white",
+         styles:""
+      }
    }
 }
 
 const ButtonSize = {
    xs: {
-      wrapper: "",
+      wrapper: "w-full px-[0px] py-[12px] ",
       text: {
          size: "sm" as "sm",
          weight: "normal" as "normal"
       },
    },
    sm: {
-      wrapper: "",
+      wrapper: "w-full px-[50px] py-[12px] ",
       text: {
-         size: "sm" as "sm",
-         weight: "normal" as "normal"
+         size: "xl" as "xl",
+         weight: "bold" as "bold"
       },
    },
    base: {
-      wrapper: "",
+      wrapper: "w-full px-[100px] py-[12px]",
       text: {
-         size: "sm" as "sm",
+         size: "lg" as "lg",
          weight: "normal" as "normal"
       },
    },
