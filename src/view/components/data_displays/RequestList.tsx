@@ -1,22 +1,31 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
-import {Button, Text} from "../../base_components";
+import {Button, Select, Text} from "../../base_components";
 import {RequestData} from "../../pages/planner_team/Request";
+import {FaPen,FaRegCheckCircle} from "react-icons/fa";
+import React, {useState} from "react";
+import button from "../../base_components/data_displays/Button";
 
 type RequestListProps = {
    data: { [key: string]: RequestData };
    handleOpenModal: (item: RequestData) => void;
 };
 
-const RequestList = (props:RequestListProps) => {
+const RequestList = (props: RequestListProps) => {
+   const [role, setRole] = useState<string>('');
+   const [showSelection, setShowSelection] = useState<boolean>(false);
+   const Aaa = (requestID:string) => {
+      setShowSelection(true)
+
+   }
    return (
       <TableContainer component={Paper}>
          <Table>
             <TableHead>
                <TableRow className="bg-G shadow-md">
-                  <TableCell>
+                  <TableCell align={`center`}>
                      <Text weight={"bold"} color={"white"}>Request ID</Text>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align={`center`}>
                      <Text weight={"bold"} color={"white"}>Contract ID</Text>
                   </TableCell>
                   <TableCell align={`center`}>
@@ -31,27 +40,56 @@ const RequestList = (props:RequestListProps) => {
                   <TableCell align={`center`}>
                      <Text weight={"bold"} color={"white"}>Status</Text>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align={`center`}>
+                     <Text weight={"bold"} color={"white"}>Update Status</Text>
+                  </TableCell>
+                  <TableCell align={`center`}>
                      <Text weight={"bold"} color={"white"}>See more detail</Text>
                   </TableCell>
                </TableRow>
             </TableHead>
             <TableBody>
-               {Object.keys(props.data).map((requestID) => (
-                  <TableRow key={requestID}>
-                     <TableCell component="th" scope="row">
-                        {requestID}
+               {Object.keys(props.data).length > 0 ? (
+                  Object.keys(props.data).map((requestID) => (
+                     <TableRow key={requestID}>
+                        <TableCell component="th" scope="row" align={`center`}>
+                           {requestID}
+                        </TableCell>
+                        <TableCell align={`center`}>
+                           {props.data[requestID].contract_id}
+                        </TableCell>
+                        <TableCell align={`center`}>{props.data[requestID].amount}</TableCell>
+                        <TableCell align={'center'}>{props.data[requestID].project_contractor_id}</TableCell>
+                        <TableCell align={'center'}>{props.data[requestID].supply_vendor_id}</TableCell>
+                        <TableCell align={'center'}>
+                           {showSelection ? (
+                              <Select {...style.select} value={role} onChange={(event) => setRole(event.target.value)}>
+                                 <option>Status</option>
+                                 <option value="admin">New</option>
+                                 <option value="planner">Ready to Collect</option>
+                                 <option value="supply_vendor">Collected</option>
+                              </Select>
+                           ) : (
+                              <Text color={"black"} weight={'bold'}>{props.data[requestID].status}</Text>
+                           )}
+                        </TableCell>
+                        <TableCell align={'center'}>
+                           <Button {...style.button} label={""} iconLeft={<FaPen size={25}/>}
+                                   onClick={() => Aaa(requestID)}/>
+                        </TableCell>
+                        <TableCell align={'center'}>
+                           <Button label={"See more"} size={"xs"} theme={`B`} wrapperStyles={"w-1/2 ml-[30%]"}
+                                   onClick={() => (props.handleOpenModal)(props.data[requestID])}/>
+                        </TableCell>
+                     </TableRow>
+                  ))
+               ) : (
+                  <TableRow>
+                     <TableCell colSpan={8} align="center">
+                        No data available
                      </TableCell>
-                     <TableCell component="th" scope="row">
-                        {props.data[requestID].contract_id}
-                     </TableCell>
-                     <TableCell>{props.data[requestID].amount}</TableCell>
-                     <TableCell align={'center'}>{props.data[requestID].project_contractor_id}</TableCell>
-                     <TableCell align={'center'}>{props.data[requestID].supply_vendor_id}</TableCell>
-                     <TableCell align={'center'}><Text color={"black"} weight={'bold'}>{props.data[requestID].status}</Text></TableCell>
-                     <TableCell align={'center'} ><Button label={"See more"} size={"xs"} theme={`B`} wrapperStyles={"w-1/2"} onClick={() => (props.handleOpenModal)(props.data[requestID])}/></TableCell>
                   </TableRow>
-               ))}
+               )}
             </TableBody>
          </Table>
       </TableContainer>
@@ -61,9 +99,13 @@ const style = {
    button: {
       size: "xs" as "xs",
       theme: "A" as "A",
-      wrapperStyles: "py-0 px-0 left-[8%]"
+      wrapperStyles: "w-1/2 ml-[30%] py-5]"
    },
-   btnCreate: "left-[0%]",
+   select: {
+      selectSize: 'xs' as 'xs',
+      theme: 'primary' as 'primary',
+      wrapperStyles: 'border-0 border-B1',
+   },
 }
 
 export default RequestList;

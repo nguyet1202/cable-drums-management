@@ -20,9 +20,9 @@ function SignInForm() {
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
+         localStorage.setItem('userID', user.uid);
          const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
          const userData = userDataSnapshot.val();
-
          if (userData && userData.role === role) {
             localStorage.setItem('role', role);
             navigate(`/${role}`, { replace: true });

@@ -39,14 +39,17 @@ const SelectTheme = {
    secondary: {
       wrapper: "bg-B1 rounded-lg shadow-lg",
    },
+   requestform:{
+      wrapper:"border-b-2 border-gray-300 py-2 px-4 w-full focus:outline-none focus:border-green-500"
+   }
 };
 
 const SelectSize = {
    xs: {
-      wrapper: "",
+      wrapper: "w-full px-[5px] py-[12px]",
    },
    sm: {
-      wrapper: "w-full px-[50px] py-[12px]",
+      wrapper: "w-full px-[30px] py-[12px]",
    },
    base: {
       wrapper: "",

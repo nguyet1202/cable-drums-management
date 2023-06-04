@@ -51,7 +51,7 @@ const InputSize = {
       },
    },
    base: {
-      wrapper: "",
+      wrapper: "py-2 px-4 w-full",
       text: {
          size: "sm" as "sm",
          weight: "normal" as "normal"
@@ -87,6 +87,13 @@ const InputTheme = {
          styles:"absolute right-0 left-3 top-1/2 transform -translate-y-1/3"
       }
    },
+   formInput:{
+      wrapper:"border-b-[0.5px] border-G  focus:outline-none focus:border-P",
+      text: {
+         color: "black" as "black",
+         styles:""
+      }
+   }
 }
 export default Input
 export {type InputProps, InputSize, InputTheme}

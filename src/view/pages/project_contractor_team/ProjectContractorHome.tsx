@@ -1,22 +1,13 @@
 import {getAuth, signOut} from "firebase/auth";
+import {ContractorRequest,ContractorLeftSideBar} from "./index";
+import React from "react";
 
 const ProjectContractorHome =()=>{
-   const handleSignOut = async () => {
-      try {
-         const authInstance = getAuth();
-         await signOut(authInstance);
-         console.log('Sign out successful');
-      } catch (error) {
-         console.error('Sign out error:', error);
-      }
-   };
    return(
-      <>Project Contractor
-         <>
-            <p>{`Signed In as `}</p>
-            <button onClick={handleSignOut}>Sign Out</button>
-         </>
-      </>
+      <main className={`flex flex-row w-full h-[100vh]`}>
+         <ContractorLeftSideBar/>
+         <ContractorRequest/>
+      </main>
    )
 }
 export default ProjectContractorHome

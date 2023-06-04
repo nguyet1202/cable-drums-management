@@ -3,7 +3,7 @@ import React from 'react';
 
 type PrivateRouteProps = {
    authenticated: boolean
-   role: "admin" | "supply_vendor" | "planner" | "project_contractor" | ("planner" | "supply_vendor")[]
+   role: "admin" | "supply_vendor" | "planner" | "project_contractor" | ("planner" | "supply_vendor")[];
    element: React.ComponentType;
 }
 
