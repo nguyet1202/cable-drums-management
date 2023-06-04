@@ -8,12 +8,11 @@ const SupplyTeamContract = () => {
    const [data, setData] = useState<{ [key: string]: ContractData }>({});
    const [selectedItem, setSelectedItem] = useState<ContractData | null>(null);
    const [modalOpen, setModalOpen] = useState<boolean>(false);
-   const userID = localStorage.getItem('user');
-   console.log(data)
+   const userID = localStorage.getItem('userID');
+
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const dbRef = ref(database);
             const userDataSnapshot = await get(ref(database, `users/${userID}`));
             const userData = userDataSnapshot.val();
             const supply_vendor_id = userData.supply_vendor_id;
@@ -21,7 +20,6 @@ const SupplyTeamContract = () => {
             const contractsQuery = query(contractsRef, orderByChild("supply_vendor_id"), equalTo(supply_vendor_id));
             const contractsSnapshot = await get(contractsQuery);
             const contractsData = contractsSnapshot.val();
-            console.log()
             setData(contractsData);
          } catch (error) {
             console.error('Lỗi khi truy vấn dữ liệu:', error);
@@ -29,13 +27,12 @@ const SupplyTeamContract = () => {
       };
 
       fetchData();
-   }, []);
+   }, [userID]);
 
-   const fetchSupplyVendorInfo = async (supplyVendorId: string) => {
+   const fetchSupplyVendorInfo = async (id: string) => {
       try {
-         const contractSnapshot = await get(ref(database, `contracts/${supplyVendorId}`));
+         const contractSnapshot = await get(ref(database, `contracts/${id}`));
          const contractData = contractSnapshot.val();
-
          if (contractSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendor_id}`));
             const vendorData = vendorSnapshot.val();
@@ -60,8 +57,9 @@ const SupplyTeamContract = () => {
    };
 
    const handleOpenModal = (item: ContractData) => {
+      let id = item.id || "";
       setSelectedItem(item);
-      fetchSupplyVendorInfo(item.supply_vendor_id);
+      fetchSupplyVendorInfo(id);
       setModalOpen(true);
    };
 
@@ -70,7 +68,7 @@ const SupplyTeamContract = () => {
    };
 
    return (
-      <div className="w-full flex flex-col  2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3">
+      <div className="w-full flex flex-col bg-W 2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3">
          <ContractList data={data} handleOpenModal={handleOpenModal} />
          <ModalContract open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
       </div>

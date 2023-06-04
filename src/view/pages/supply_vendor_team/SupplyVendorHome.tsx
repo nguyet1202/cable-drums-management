@@ -1,4 +1,3 @@
-import {LeftLayout} from "../../layouts";
 import {SupplyTeamContract} from "./index";
 const SupplyVendorHome =()=>{
    return (
