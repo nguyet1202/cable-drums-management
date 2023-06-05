@@ -12,11 +12,12 @@ function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
    const [role, setRole] = useState<string>('');
+
    const navigate = useNavigate();
    const handleLogin = async () => {
       try {
-         if (!email || !password) {
-            throw new Error("Please enter your email and password to log in");
+         if (!email || !password || !role) {
+            alert("Please enter your email and password to log in");
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
@@ -27,12 +28,13 @@ function SignInForm() {
             localStorage.setItem('role', role);
             navigate(`/${role}`, { replace: true });
          } else {
-            throw new Error("Invalid user role");
+            alert("Invalid user role");
          }
       } catch (error) {
          const errorCode = (error as AuthError).code;
          const errorMessage = (error as AuthError).message;
          console.error('Error:', errorCode, errorMessage);
+         alert('sign in faild')
       }
    };
    return (

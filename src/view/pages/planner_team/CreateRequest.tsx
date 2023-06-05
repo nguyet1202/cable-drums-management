@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from "../../base_components";
 import {database} from "../../../configs/FirebaseConfig";
-import {get, ref, set,push} from "firebase/database";
+import {get, ref, set, push, child} from "firebase/database";
 import CreateRequestForm from "./CreateRequestForm";
 import { Modal} from '@mui/material';
-import {useDispatch, useSelector} from "react-redux";
-import {closeModal} from "../../../store/slices/modalSlice";
+import { useDispatch } from "react-redux";
+import { addNotification } from "../../../store/slices/notificationSlice";
+import {setData} from "../../../store/slices/contractSlice";
+
 type CreateRequestProps = {
    onClose: () => void;
    open: boolean;
@@ -15,39 +17,65 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
    const [project_contractor_id, setProject_contractor_id] = useState<string>('');
    const [amount, setAmount] = useState<number>(0);
    const [supply_vendor_id, setSupply_vendor_id] = useState<string>('');
+   const [planner_id, setPlanner_id] = useState<string>('');
+   const userID = localStorage.getItem('user');
 
-   // const dispatch = useDispatch();
-   // const showModal = useSelector((state: { modal:
-   //       { showModal: boolean } }) => state.modal.showModal);
-   // const handleCloseModal = () => {
-   //    dispatch(closeModal());
-   // };
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      const dbRef = ref(database);
+      get(child(dbRef, `users/${userID}`))
+         .then((snapshot) => {
+            if (snapshot.exists()) {
+               const getPlannerID = snapshot.val();
+               setPlanner_id(getPlannerID.planner_id)
+            } else {
+               throw new Error("No data available");
+            }
+         })
+         .catch((error) => {
+            throw new Error(error);
+         });
+   }, []);
    const CreateNewRequest = async () => {
       try {
-         if (!contract_id || !project_contractor_id || !amount || !supply_vendor_id) {
+         if (!contract_id || !project_contractor_id || !amount || !supply_vendor_id || !planner_id) {
             throw new Error("Please enter all required fields");
          }
          const snapshot = await get(ref(database, `contracts/${contract_id}`));
          const withdrawRequests = snapshot.val();
-         const contractAmount = withdrawRequests?.val()?.amount;
-         // const contractAmount = withdrawRequests.amount;
+         const contractAmount = withdrawRequests.amount;
          if (Number(amount) > contractAmount) {
             alert("The entered amount exceeds the current available amount");
          }
          const withdrawRequestsRef = ref(database, 'withdraw_requests');
          const newRequestRef = push(withdrawRequestsRef);
          const newRequestId = newRequestRef.key;
-
          const newRequest = {
             id: newRequestId,
+            planner_id:planner_id,
             contract_id: contract_id,
             project_contractor_id: project_contractor_id,
             amount: amount,
             supply_vendor_id: supply_vendor_id,
             status: "new",
          };
-
          await set(newRequestRef, newRequest);
+
+         const withdrawNotisRef = ref(database, 'notification');
+         const newNotiRef = push(withdrawNotisRef);
+         const newNotiId = newNotiRef.key;
+
+         const notification = {
+            id: newNotiId || '',
+            requestId: newRequestId || '',
+            supply_vendor_id: supply_vendor_id,
+            project_contractor_id: project_contractor_id,
+            planner_id:planner_id,
+            message: "Planner team created a new request and assigned it to you"
+         };
+         dispatch(addNotification(notification));
+         await set(newNotiRef, notification);
          onClose();
          alert('success');
       } catch (error) {
@@ -66,6 +94,7 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
          <div className={style.modalContent}>
             <CreateRequestForm
                contract_id={contract_id}
+               planner_id={planner_id}
                project_contractor_id={project_contractor_id}
                amount={amount}
                supply_vendor_id={supply_vendor_id}

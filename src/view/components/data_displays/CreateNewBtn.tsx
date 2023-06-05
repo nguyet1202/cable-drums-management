@@ -20,7 +20,6 @@ const CreateNewBtn =(props:CreateBtnProps)=>{
             wrapperStyles={props.wrapperStyles}
             onClick={ handleOpenModal}
          />
-
       </section>
    )
 }

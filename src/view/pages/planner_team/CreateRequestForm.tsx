@@ -6,6 +6,7 @@ type RequestData = {
    project_contractor_id: string;
    amount: number;
    supply_vendor_id: string;
+   planner_id:string,
    contract_idOnchange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
    project_contractor_idOnchange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
    amountOnchange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -63,6 +64,14 @@ const CreateRequestForm = (props: RequestData) => {
                      </Select>
                   </div>
                </div>
+               <div className="mb-6">
+                  <Text {...style.textfield}>Planner ID</Text>
+                  <Input
+                     type="string"
+                     value={(props.planner_id)}
+                     {...style.input}
+                  />
+               </div>
             </div>
          </div>
       </div>
@@ -84,10 +93,10 @@ const style = {
    input: {
       size: "base" as "base",
       theme: "formInput" as "formInput",
-      wrapperStyles:"bg-P3"
+      wrapperStyles:"bg-P3 text-2xl"
    },
    select:{
-      wrapperStyles:"bg-P3"
+      wrapperStyles:"bg-P3 text-xl"
    }
 
 }

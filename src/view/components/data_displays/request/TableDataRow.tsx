@@ -13,8 +13,8 @@ type TableDataRowProps = {
    status: string;
    onChangeVendor?: (event: React.ChangeEvent<HTMLSelectElement>) => void; // Add onChange with correct casing
    onchangeContract?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-   onClick1?: () => void;
-   onClick2?: () => void;
+   onClickUpdateRequest?: () => void;
+   onClickOpenSelect?: () => void;
    onClickSeemore?: () => void;
 };
 
@@ -68,7 +68,7 @@ const TableDataRow = (props: TableDataRowProps) => {
                      wrapperStyles="w-1/2 ml-[30%] py-5]"
                      label=""
                      iconLeft={<BsFillCheckCircleFill size={50} color="green" />}
-                     onClick={props.onClick1}
+                     onClick={props.onClickUpdateRequest}
                      wrapperIconStyles="shadow-2xl"
                   />
                ) : (
@@ -78,7 +78,7 @@ const TableDataRow = (props: TableDataRowProps) => {
                      wrapperStyles="w-1/2 ml-[30%] py-5]"
                      label=""
                      iconLeft={<FaPen size={25} />}
-                     onClick={props.onClick2}
+                     onClick={props.onClickOpenSelect}
                   />
                )}
             </TableCell>

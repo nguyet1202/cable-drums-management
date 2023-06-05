@@ -6,15 +6,19 @@ import * as Yup from 'yup';
 interface FormAuthenProps {
    title: string;
    type?: string;
+   teamID?:string;
    role: string;
    email: string;
    password: string;
    onRoleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
    onEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
    onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+   onteamIDChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormAuthen = (props: FormAuthenProps) => {
+   const userrole = localStorage.getItem('role');
+   console.log('có user ko',userrole)
    return (
       <form className={`${style.wrapper}`}>
          <Text {...style.text}>{props.title}</Text>
@@ -39,6 +43,15 @@ const FormAuthen = (props: FormAuthenProps) => {
             value={props.password}
             onChange={props.onPasswordChange}
          />
+         {userrole==="admin" ? (
+            <Input
+               {...style.inputEmail}
+               label="Your team ID"
+               type={props.type}
+               value={props.teamID}
+               onChange={props.onteamIDChange}
+            />
+         ) : null}
       </form>
    );
 };

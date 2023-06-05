@@ -2,16 +2,24 @@ import {getAuth, signOut} from "firebase/auth";
 import {Button} from "../../base_components";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
 const ButtonLogout =()=>{
    const navigate = useNavigate();
+   const [reloadComponent, setReloadComponent] = useState(false);
+   useEffect(() => {
+      if (reloadComponent) {
+         setReloadComponent(false);
+      }
+   }, [reloadComponent]);
    const handleSignOut = async () => {
       try {
          const authInstance = getAuth();
          await signOut(authInstance);
-         navigate(`/signin`, { replace: true });
          localStorage.removeItem('role');
          localStorage.removeItem('userID');
          alert('Sign out successful');
+         navigate(`/signin`, { replace: true });
+         setReloadComponent(true);
       } catch (error) {
          console.error('Sign out error:', error);
       }

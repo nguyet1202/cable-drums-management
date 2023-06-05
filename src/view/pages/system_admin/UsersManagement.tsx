@@ -29,11 +29,11 @@ const UsersManagement = () => {
             if (snapshot.exists()) {
                setData(snapshot.val());
             } else {
-               throw new Error("No data available");
+               console.log("No data available");
             }
          })
          .catch((error) => {
-            throw new Error(error);
+            console.log(error);
          });
    }, [data]);
 

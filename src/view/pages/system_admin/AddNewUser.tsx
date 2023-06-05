@@ -13,6 +13,7 @@ const AddNewUser = () => {
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
    const [role, setRole] = useState<RegisterRole>( 'admin' );
+   const [teamID, setTeamID] = useState<string>( '' );
 
    const dispatch = useDispatch();
    const showModal = useSelector((state: { modal: { showModal: boolean } }) => state.modal.showModal);
@@ -29,7 +30,10 @@ const AddNewUser = () => {
          await set(ref(database, `users/${user.uid}`), {
             email: user.email,
             password: password,
-            role: role
+            role: role,
+            ...(role === "planner" && { planner_id: teamID }),
+            ...(role === "supply_vendor" && { supply_vendor_id: teamID }),
+            ...(role === "project_contractor" && { project_contractor_id: teamID }),
          });
          handleCloseModal();
          console.log('succes')
@@ -54,9 +58,11 @@ const AddNewUser = () => {
                   role={role}
                   email={email}
                   password={password}
+                  teamID={teamID}
                   onRoleChange={(event) => setRole(event.target.value as RegisterRole)}
                   onEmailChange={(event) => setEmail(event.target.value)}
                   onPasswordChange={(event) => setPassword(event.target.value)}
+                  onteamIDChange={(event) => setTeamID(event.target.value)}
                />
                <Button type="button" {...style.submitBtn} label="Register" onClick={AddUser} />
                <Button

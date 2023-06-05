@@ -1,13 +1,10 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
-import { Button, Select, Text } from "../../base_components";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
-import { BsFillCheckCircleFill } from "react-icons/bs";
 import { database } from "../../../configs/FirebaseConfig";
 import { get, ref, set } from "firebase/database";
 import { RequestData } from "../../../store/slices/requestSlice";
-import TableHeaderCell from "./request/TableHeaderCell";
-import TableDataRow from "./request/TableDataRow";
+import {TableDataRow,TableHeaderCell} from "./request";
 
 type RequestListProps = {
    handleOpenModal: (item: RequestData) => void;
@@ -67,8 +64,9 @@ const RequestList: React.FC<RequestListProps> = (props) => {
             }));
             if (status === "collected") {
                await updateContractAmount(currentData.contract_id, currentData.amount);
-               setReloadComponent(true);
+
             }
+            setReloadComponent(true);
          } else {
             console.log(`Request with ID ${requestId} does not exist`);
          }
@@ -76,6 +74,12 @@ const RequestList: React.FC<RequestListProps> = (props) => {
          console.error("Error:", error);
       }
    };
+
+   useEffect(() => {
+      if (reloadComponent) {
+         setReloadComponent(false);
+      }
+   }, [reloadComponent]);
 
    return (
       <TableContainer component={Paper}>
@@ -104,8 +108,8 @@ const RequestList: React.FC<RequestListProps> = (props) => {
                         status={status}
                         onChangeVendor={(event) => setStatus(event.target.value)}
                         onchangeContract={(event) => setStatus(event.target.value)}
-                        onClick1={() => updateRequestStatus(requestID)}
-                        onClick2={() => handleSelectRow(requestID)}
+                        onClickUpdateRequest={() => updateRequestStatus(requestID)}
+                        onClickOpenSelect={() => handleSelectRow(requestID)}
                         onClickSeemore={() => (props.handleOpenModal)(data[requestID])}
                      />
                   ))
