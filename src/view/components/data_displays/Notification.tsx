@@ -3,12 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import { BiBell } from 'react-icons/bi';
-import { clearNotification, selectNotificationsCount } from '../../../store/slices/notificationSlice';
+import { clearNotification } from '../../../store/slices/notificationSlice';
 import { child, get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import { Modal } from '@mui/material';
-import { closeModal, openModal } from "../../../store/slices/modalSlice";
-import { FormAuthen } from "./index";
 import { Button, Text } from "../../base_components";
 type NotificationMessage = {
       id: string;
@@ -21,7 +19,6 @@ type NotificationMessage = {
 
 const Notification = () => {
    const dispatch = useDispatch();
-   const notificationsCount = useSelector(selectNotificationsCount);
    const [notificationMessage, setNotificationMessage] = useState<{ [key: string]:NotificationMessage}>({});
 
    const [open, setOpen] = useState<boolean>(false);
@@ -52,7 +49,7 @@ const Notification = () => {
 
    return (
       <Box sx={{ color: 'action.active' }}>
-         <Badge color="secondary" badgeContent={notificationsCount} variant="dot">
+         <Badge color="secondary" variant="dot">
             <BiBell size={30} className="text-B1" onClick={handleOpenModal} />
          </Badge>
          <Modal
@@ -64,7 +61,7 @@ const Notification = () => {
             <div className={style.modalWrapper}>
                <div className={style.modalContent}>
                   {Object.keys(notificationMessage).map((messageID) => (
-                     <div className={'flex flex-row gap-6'}>
+                     <div className={'flex flex-row gap-6 border border-BB py-3 px-3'}>
                         <BiBell size={30} className="text-B1" onClick={handleOpenModal} />
                         <Text size={'lg'} weight={'bold'} color={'pink'} key={messageID}>{notificationMessage[messageID].message}</Text>
                      </div>
@@ -82,7 +79,7 @@ const Notification = () => {
 };
 
 const style = {
-   modalWrapper: "fixed top-[-60%] right-6 bottom-0 flex items-center bg-black bg-opacity-30",
+   modalWrapper: "fixed top-[-57%] right-6 bottom-0 flex items-center bg-black bg-opacity-30",
    modalContent: "bg-B2 rounded px-16 py-16 flex flex-col gap-7",
    closeButton: "bg-gray-500 text-white px-4 py-2 rounded",
    submitBtn: {
