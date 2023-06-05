@@ -1,25 +1,12 @@
-import { useState, useEffect } from "react";
-import {child, equalTo, get, orderByChild, query, ref} from "firebase/database";
+import { useEffect } from "react";
+import {equalTo, get, orderByChild, query, ref} from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
-import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
-type RequestData = {
-   id?:string;
-   contract_id: string;
-   project_contractor_id: string;
-   amount: number;
-   supply_vendor_id: string;
-   status:string;
-   teamname:string;
-   phonenumbers:number;
-   email:string,
-   project_contractor_name:string,
-   project_contractor_phone:string,
-   project_contractor_email:string,
-};
+import { ModalRequestDetail,RequestList} from "../../components";
+import { useDispatch } from 'react-redux';
+import {setSelectedItemRequest,setDataRequest,RequestData} from "../../../store/slices/requestSlice";
+import {openModal} from "../../../store/slices/modalSlice";
 const SupplyVendorRequest = () => {
-   const [data, setData] = useState<{ [key: string]: RequestData }>({});
-   const [selectedItem, setSelectedItem] = useState<RequestData | null>(null);
-   const [modalOpen, setModalOpen] = useState<boolean>(false);
+   const dispatch = useDispatch();
    const userID = localStorage.getItem('userID');
    useEffect(() => {
    const fetchData = async () => {
@@ -31,8 +18,7 @@ const SupplyVendorRequest = () => {
          const requestsQuery = query(requestsRef, orderByChild("supply_vendor_id"), equalTo(supply_vendor_id));
          const requestsSnapshot = await get(requestsQuery);
          const contractsData = requestsSnapshot.val();
-         console.log()
-         setData(contractsData);
+         dispatch(setDataRequest(contractsData));
       } catch (error) {
          console.error('Lỗi khi truy vấn dữ liệu:', error);
       }
@@ -55,7 +41,7 @@ const SupplyVendorRequest = () => {
                const ProjectorData = ProjectorSnapshot.val();
 
                if (vendorSnapshot.exists()) {
-                  setSelectedItem({
+                  dispatch(setSelectedItemRequest({
                      contract_id: contractData.contract_id,
                      project_contractor_id: contractData.project_contractor_id,
                      project_contractor_name: ProjectorData.teamname,
@@ -67,7 +53,7 @@ const SupplyVendorRequest = () => {
                      teamname: vendorData.teamname,
                      phonenumbers: vendorData.phonenumbers,
                      email: vendorData.email
-                  });
+                  }));
                }
             }
          } else {
@@ -79,20 +65,17 @@ const SupplyVendorRequest = () => {
    };
 
    const handleOpenModal = (item: RequestData) => {
+      dispatch(setSelectedItemRequest(item));
       let id = item.id || "";
-      setSelectedItem(item);
       fetchSupplyVendorInfo(id);
-      setModalOpen(true);
+      dispatch(openModal(true));
    };
 
-   const handleCloseModal = () => {
-      setModalOpen(false);
-   };
 
    return (
       <div className={`${style.wrapper}`}>
-         <RequestList data={data}  handleOpenModal={handleOpenModal}  />
-         <ModalRequestDetail open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
+         <RequestList handleOpenModal={handleOpenModal}  />
+         <ModalRequestDetail />
       </div>
    );
 };

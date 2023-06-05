@@ -6,7 +6,7 @@ import {database} from "../../../configs/FirebaseConfig";
 
 const InforUser = () => {
    const [data, setData] = useState<string>('');
-   const userID = localStorage.getItem('user');
+   const userID = localStorage.getItem('userID');
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `users/${userID}`))

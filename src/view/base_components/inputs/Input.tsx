@@ -7,6 +7,7 @@ type InputProps = {
    type?:string
    wrapperStyles?:string
    value?: string
+   defauvalue?:string
    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
    onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 }
@@ -26,7 +27,7 @@ function Input(props: InputProps) {
          </Text>
          <input className={`${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}
                 placeholder={props.label} type={props.type}
-                value={props.value} onChange={props.onChange} onBlur={props.onBlur}
+                value={props.value} defaultValue={props.defauvalue} onChange={props.onChange} onBlur={props.onBlur}
          />
       </label>
    )
@@ -58,7 +59,7 @@ const InputSize = {
       },
    },
    md: {
-      wrapper: "w-full py-[13px] pl-[15px] pr-[100px] mt-2 ",
+      wrapper: "w-full py-[18px] px-[55px] mt-2 ",
       text: {
          size: "sm" as "sm",
          weight: "normal" as "normal"

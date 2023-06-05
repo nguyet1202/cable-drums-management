@@ -1,13 +1,16 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import {Button, Text} from "../../base_components";
 import {ContractData} from "../../pages/planner_team/Contract";
+import {useSelector} from "react-redux";
 
 type ContractListProps = {
-   data: { [key: string]: ContractData };
+   // data: { [key: string]: ContractData };
    handleOpenModal: (item: ContractData) => void;
 };
 
 const ContractList = (props:ContractListProps) => {
+   const data = useSelector((state: { contract:
+         { data: { [key: string]: ContractData }} }) => state.contract.data);
    return (
       <TableContainer component={Paper}>
          <Table>
@@ -31,15 +34,15 @@ const ContractList = (props:ContractListProps) => {
                </TableRow>
             </TableHead>
             <TableBody>
-               {Object.keys(props.data).map((contractId) => (
+               {Object.keys(data).map((contractId) => (
                   <TableRow key={contractId}>
                      <TableCell component="th" scope="row">
-                        {props.data[contractId].start_date}
+                        {data[contractId].start_date}
                      </TableCell>
-                     <TableCell>{props.data[contractId].end_date}</TableCell>
-                     <TableCell align={'center'}>{props.data[contractId].contract_amount}</TableCell>
-                     <TableCell align={'center'}>{props.data[contractId].supply_vendor_id}</TableCell>
-                     <TableCell align={'center'} ><Button label={"See more"} size={"xs"} theme={`B`} wrapperStyles={"w-1/2"} onClick={() => (props.handleOpenModal)(props.data[contractId])}/></TableCell>
+                     <TableCell>{data[contractId].end_date}</TableCell>
+                     <TableCell align={'center'}>{data[contractId].contract_amount}</TableCell>
+                     <TableCell align={'center'}>{data[contractId].supply_vendor_id}</TableCell>
+                     <TableCell align={'center'} ><Button label={"See more"} size={"xs"} theme={`B`} wrapperStyles={"w-1/2"} onClick={() => (props.handleOpenModal)(data[contractId])}/></TableCell>
                   </TableRow>
                ))}
             </TableBody>
@@ -47,13 +50,5 @@ const ContractList = (props:ContractListProps) => {
       </TableContainer>
    );
 };
-const style = {
-   button: {
-      size: "xs" as "xs",
-      theme: "A" as "A",
-      wrapperStyles: "py-0 px-0 left-[8%]"
-   },
-   btnCreate: "left-[0%]",
-}
 
 export default ContractList;

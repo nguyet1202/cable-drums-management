@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-import { child, get, ref, query, equalTo, orderByChild } from "firebase/database";
+import { useEffect } from "react";
+import { get, ref, query, equalTo, orderByChild } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import { ContractList, ModalContract } from "../../components";
-import {ContractData} from "../planner_team";
-
+import {ContractData} from "../../../store/slices/contractSlice";
+import { useDispatch } from 'react-redux';
+import {setSelectedItem,setData} from "../../../store/slices/contractSlice";
+import {openModal} from "../../../store/slices/modalSlice";
 const SupplyTeamContract = () => {
-   const [data, setData] = useState<{ [key: string]: ContractData }>({});
-   const [selectedItem, setSelectedItem] = useState<ContractData | null>(null);
-   const [modalOpen, setModalOpen] = useState<boolean>(false);
    const userID = localStorage.getItem('userID');
-
+   const dispatch = useDispatch();
    useEffect(() => {
       const fetchData = async () => {
          try {
@@ -20,7 +19,7 @@ const SupplyTeamContract = () => {
             const contractsQuery = query(contractsRef, orderByChild("supply_vendor_id"), equalTo(supply_vendor_id));
             const contractsSnapshot = await get(contractsQuery);
             const contractsData = contractsSnapshot.val();
-            setData(contractsData);
+            dispatch(setData(contractsData));
          } catch (error) {
             console.error('Lỗi khi truy vấn dữ liệu:', error);
          }
@@ -36,9 +35,8 @@ const SupplyTeamContract = () => {
          if (contractSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendor_id}`));
             const vendorData = vendorSnapshot.val();
-
             if (vendorSnapshot.exists()) {
-               setSelectedItem({
+               dispatch(setSelectedItem({
                   start_date: contractData.start_date,
                   end_date: contractData.end_date,
                   contract_amount: contractData.contract_amount,
@@ -46,7 +44,7 @@ const SupplyTeamContract = () => {
                   teamname: vendorData.teamname,
                   phonenumbers: vendorData.phonenumbers,
                   email: vendorData.email
-               });
+               }));
             }
          } else {
             throw new Error("Contract not found");
@@ -60,17 +58,13 @@ const SupplyTeamContract = () => {
       let id = item.id || "";
       setSelectedItem(item);
       fetchSupplyVendorInfo(id);
-      setModalOpen(true);
-   };
-
-   const handleCloseModal = () => {
-      setModalOpen(false);
+      dispatch(openModal(true));
    };
 
    return (
       <div className="w-full flex flex-col bg-W 2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3">
-         <ContractList data={data} handleOpenModal={handleOpenModal} />
-         <ModalContract open={modalOpen} selectedItem={selectedItem} onClose={handleCloseModal} />
+         <ContractList handleOpenModal={handleOpenModal} />
+         <ModalContract />
       </div>
    );
 };

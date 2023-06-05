@@ -22,8 +22,6 @@ type UserData = {
 
 const UsersManagement = () => {
    const [data, setData] = useState<{ [key: string]: UserData }>({});
-   const [showModal, setShowModal] = useState<boolean>(false);
-   // console.log(data)
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `users`))
@@ -31,29 +29,28 @@ const UsersManagement = () => {
             if (snapshot.exists()) {
                setData(snapshot.val());
             } else {
-               throw new Error("No data available");
+               console.log("No data available");
             }
          })
          .catch((error) => {
-            throw new Error(error);
+            console.log(error);
          });
    }, [data]);
 
-   const openModal = () => {
-      setShowModal(true);
-   };
+
    const handleDeleteUser = async (uid:string) => {
       try {
          const userRef = ref(database, `users/${uid}`);
          await remove(userRef);
+         alert("succes")
       } catch (error) {
          console.error('Lỗi khi xóa người dùng:', error);
       }
    };
    return (
       <div className={`${style.wrapper}`}>
-         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} onClick={openModal} />
-         <AddNewUser  open={showModal} onClose={() => setShowModal(false)} />
+         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} />
+         <AddNewUser />
          <TableContainer component={Paper}>
             <Table>
                <TableHead>

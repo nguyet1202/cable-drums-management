@@ -12,11 +12,12 @@ function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
    const [role, setRole] = useState<string>('');
+
    const navigate = useNavigate();
    const handleLogin = async () => {
       try {
-         if (!email || !password) {
-            throw new Error("Please enter your email and password to log in");
+         if (!email || !password || !role) {
+            alert("Please enter your email and password to log in");
          }
          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
          const user = userCredential.user;
@@ -27,38 +28,15 @@ function SignInForm() {
             localStorage.setItem('role', role);
             navigate(`/${role}`, { replace: true });
          } else {
-            throw new Error("Invalid user role");
+            alert("Invalid user role");
          }
       } catch (error) {
          const errorCode = (error as AuthError).code;
          const errorMessage = (error as AuthError).message;
          console.error('Error:', errorCode, errorMessage);
+         alert('sign in faild')
       }
    };
-   // const validationSchema = Yup.object().shape({
-   //    role: Yup.string().required('Please choose your role'),
-   //    email: Yup.string().email('Invalid email').required('Please enter your email'),
-   //    password: Yup.string().required('Please enter your password'),
-   // });
-   //
-   // const formik = useFormik({
-   //    initialValues: {
-   //       role: role,
-   //       email: email,
-   //       password: password,
-   //    },
-   //    validationSchema,
-   //    onSubmit: handleLogin,
-   // });
-   // const handleEmailBlur = () => {
-   //    formik.setFieldTouched('email', true);
-   // };
-   // const handlePasswordBlur = () => {
-   //    formik.setFieldTouched('password', true);
-   // };
-   // const handleRoleBlur = () => {
-   //    formik.setFieldTouched('role', true);
-   // };
    return (
       <div className={`${style.wrapper}`}>
          <FormAuthen
@@ -70,11 +48,6 @@ function SignInForm() {
             onRoleChange={(event) => setRole(event.target.value)}
             onEmailChange={(event) => setEmail(event.target.value)}
             onPasswordChange={(event) => setPassword(event.target.value)}
-            // errors={formik.errors}
-            // touched={formik.touched}
-            // onEmailBlur={handleEmailBlur}
-            // onPasswordBlur={handlePasswordBlur}
-            // onRoleBlur={handleRoleBlur}
          />
          <Button type="button" {...style.submitBtn} label={'Login'} onClick={handleLogin} />
       </div>

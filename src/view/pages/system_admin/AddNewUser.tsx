@@ -5,18 +5,21 @@ import {createUserWithEmailAndPassword} from "firebase/auth";
 import { auth, database } from "../../../configs/FirebaseConfig";
 import { ref, set } from "firebase/database";
 import { Modal} from '@mui/material';
-type AddNewUserProps = {
-   onClose: () => void;
-   open: boolean;
-}
-
+import { useDispatch,useSelector } from 'react-redux';
+import {closeModal} from "../../../store/slices/modalSlice";
 type RegisterRole = "admin" | "supply_vendor" | "planner" | "project_contractor";
 
-const AddNewUser = ({  open, onClose }: AddNewUserProps) => {
+const AddNewUser = () => {
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
    const [role, setRole] = useState<RegisterRole>( 'admin' );
+   const [teamID, setTeamID] = useState<string>( '' );
 
+   const dispatch = useDispatch();
+   const showModal = useSelector((state: { modal: { showModal: boolean } }) => state.modal.showModal);
+   const handleCloseModal = () => {
+      dispatch(closeModal());
+   };
    const AddUser = async () => {
       try {
          if (!email || !password || !role) {
@@ -27,9 +30,12 @@ const AddNewUser = ({  open, onClose }: AddNewUserProps) => {
          await set(ref(database, `users/${user.uid}`), {
             email: user.email,
             password: password,
-            role: role
+            role: role,
+            ...(role === "planner" && { planner_id: teamID }),
+            ...(role === "supply_vendor" && { supply_vendor_id: teamID }),
+            ...(role === "project_contractor" && { project_contractor_id: teamID }),
          });
-         onClose();
+         handleCloseModal();
          console.log('succes')
       } catch (error) {
          console.error('Error:', error);
@@ -39,8 +45,8 @@ const AddNewUser = ({  open, onClose }: AddNewUserProps) => {
 
    return (
       <Modal
-         open={open}
-         onClose={onClose}
+         open={showModal}
+         onClose={handleCloseModal}
          aria-labelledby="modal-title"
          aria-describedby="modal-description"
       >
@@ -52,15 +58,17 @@ const AddNewUser = ({  open, onClose }: AddNewUserProps) => {
                   role={role}
                   email={email}
                   password={password}
+                  teamID={teamID}
                   onRoleChange={(event) => setRole(event.target.value as RegisterRole)}
                   onEmailChange={(event) => setEmail(event.target.value)}
                   onPasswordChange={(event) => setPassword(event.target.value)}
+                  onteamIDChange={(event) => setTeamID(event.target.value)}
                />
                <Button type="button" {...style.submitBtn} label="Register" onClick={AddUser} />
                <Button
                   label="CLOSE"
                   {...style.buttonClose}
-                  onClick={onClose}
+                  onClick={handleCloseModal}
                />
             </div>
          </div>
