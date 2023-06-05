@@ -1,4 +1,3 @@
-// RootLayout.tsx
 import React from "react";
 import MainLeftLayout from "./MainLeftLayout";
 import {Header} from "./index";

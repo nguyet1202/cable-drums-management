@@ -17,7 +17,6 @@ const ButtonLogout =()=>{
          await signOut(authInstance);
          localStorage.removeItem('role');
          localStorage.removeItem('userID');
-         alert('Sign out successful');
          navigate(`/signin`, { replace: true });
          setReloadComponent(true);
       } catch (error) {

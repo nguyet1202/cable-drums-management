@@ -81,6 +81,14 @@ const ButtonTheme = {
          styles:"w-[500px]"
       }
    },
+   NotiBtn: {
+      wrapper: "bg-W rounded text-P rounded-lg shadow-lg",
+      text: {
+         color:"black" as "black",
+         size:"xs" as "xs",
+         styles:"w-[90%]"
+      }
+   },
 }
 
 const ButtonSize = {

@@ -12,7 +12,8 @@ import {child, get, ref, remove} from "firebase/database";
 import {database} from "../../../configs/FirebaseConfig";
 import {CreateNewBtn} from "../../components";
 import {AddNewUser} from "./index";
-
+import { useDispatch,useSelector } from "react-redux";
+import {RootState} from "../../../store/store";
 type UserData = {
    uid: string;
    email: string;
@@ -22,6 +23,7 @@ type UserData = {
 
 const UsersManagement = () => {
    const [data, setData] = useState<{ [key: string]: UserData }>({});
+
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `users`))
@@ -29,11 +31,11 @@ const UsersManagement = () => {
             if (snapshot.exists()) {
                setData(snapshot.val());
             } else {
-               console.log("No data available");
+               alert("No data available");
             }
          })
          .catch((error) => {
-            console.log(error);
+            alert(error);
          });
    }, [data]);
 

@@ -9,8 +9,6 @@ type PrivateRouteProps = {
 
 export const PrivateRoute = ({ element: Element, authenticated, role }: PrivateRouteProps) => {
    const userRole = localStorage.getItem('role');
-   console.log(userRole, authenticated);
-
    const isUserRoleAllowed =
       typeof userRole === 'string' &&
       (Array.isArray(role) ? role.includes(userRole as ("planner" | "supply_vendor")) : userRole === role);

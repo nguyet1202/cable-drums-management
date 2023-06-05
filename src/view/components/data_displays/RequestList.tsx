@@ -2,15 +2,15 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper}
 import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import { database } from "../../../configs/FirebaseConfig";
-import { get, ref, set } from "firebase/database";
+import {get, ref, set, push, child} from "firebase/database";
 import { RequestData } from "../../../store/slices/requestSlice";
 import {TableDataRow,TableHeaderCell} from "./request";
-
+import { useDispatch } from "react-redux";
 type RequestListProps = {
    handleOpenModal: (item: RequestData) => void;
 };
 
-const RequestList: React.FC<RequestListProps> = (props) => {
+const RequestList = (props:RequestListProps) => {
    const data = useSelector((state: {
       request: { data: { [key: string]: RequestData } };
    }) => state.request.data);
@@ -40,7 +40,7 @@ const RequestList: React.FC<RequestListProps> = (props) => {
             alert(`Contract with ID ${contractId} does not exist`);
          }
       } catch (error) {
-         console.error("Error:", error);
+         alert(error);
       }
    };
 
@@ -53,7 +53,7 @@ const RequestList: React.FC<RequestListProps> = (props) => {
          const snapshot = await get(requestRef);
          const currentData = snapshot.val();
          if (currentData.status === "collected") {
-            alert("You can not update");
+            alert("You cannot update");
          }
          if (currentData) {
             const updatedData = { ...currentData, status: status };
@@ -62,11 +62,27 @@ const RequestList: React.FC<RequestListProps> = (props) => {
                ...prevSelectedRows,
                [requestId]: false,
             }));
+
+            const withdrawNotisRef = ref(database, "notification");
+            const newNotiRef = push(withdrawNotisRef);
+            const newNotiId = newNotiRef.key;
+            const message =
+               userRole === "project_contractor"
+                  ? `project contractor updated the status of request ${requestId}`
+                  : `supply vendor updated the status of request ${requestId}`;
+            const notification = {
+               id: newNotiId || "",
+               requestId: requestId || "",
+               supply_vendor_id: currentData.supply_vendor_id,
+               project_contractor_id: currentData.project_contractor_id,
+               planner_id: currentData.planner_id,
+               message: message,
+            };
+            await set(newNotiRef, notification);
+            setReloadComponent(true);
             if (status === "collected") {
                await updateContractAmount(currentData.contract_id, currentData.amount);
-
             }
-            setReloadComponent(true);
          } else {
             console.log(`Request with ID ${requestId} does not exist`);
          }
@@ -74,6 +90,7 @@ const RequestList: React.FC<RequestListProps> = (props) => {
          console.error("Error:", error);
       }
    };
+
 
    useEffect(() => {
       if (reloadComponent) {

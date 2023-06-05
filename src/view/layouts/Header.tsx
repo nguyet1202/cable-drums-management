@@ -1,12 +1,14 @@
 import {InforUser} from "../components";
 import {Notification} from "../components";
 const Header=()=>{
+   const userRole = localStorage.getItem('role');
    return(
       <main className={style.wrapper}>
          <InforUser/>
-         <Notification/>
+         {userRole !== "admin" && (
+            <Notification/>
+         )}
       </main>
-
    )
 }
 const style={

@@ -7,8 +7,9 @@ import { ref, set } from "firebase/database";
 import { Modal} from '@mui/material';
 import { useDispatch,useSelector } from 'react-redux';
 import {closeModal} from "../../../store/slices/modalSlice";
-type RegisterRole = "admin" | "supply_vendor" | "planner" | "project_contractor";
+import {RootState} from "../../../store/store";
 
+type RegisterRole = "admin" | "supply_vendor" | "planner" | "project_contractor";
 const AddNewUser = () => {
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
@@ -16,7 +17,7 @@ const AddNewUser = () => {
    const [teamID, setTeamID] = useState<string>( '' );
 
    const dispatch = useDispatch();
-   const showModal = useSelector((state: { modal: { showModal: boolean } }) => state.modal.showModal);
+   const showModal = useSelector((state: RootState) => state.modal.showModal);
    const handleCloseModal = () => {
       dispatch(closeModal());
    };
@@ -35,10 +36,10 @@ const AddNewUser = () => {
             ...(role === "supply_vendor" && { supply_vendor_id: teamID }),
             ...(role === "project_contractor" && { project_contractor_id: teamID }),
          });
+         alert('succes');
          handleCloseModal();
-         console.log('succes')
       } catch (error) {
-         console.error('Error:', error);
+         alert( error);
       }
    };
 

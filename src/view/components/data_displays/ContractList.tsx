@@ -4,7 +4,6 @@ import {ContractData} from "../../pages/planner_team/Contract";
 import {useSelector} from "react-redux";
 
 type ContractListProps = {
-   // data: { [key: string]: ContractData };
    handleOpenModal: (item: ContractData) => void;
 };
 

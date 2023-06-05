@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
-import { BiBell } from 'react-icons/bi';
-import { clearNotification } from '../../../store/slices/notificationSlice';
-import { child, get, ref } from "firebase/database";
-import { database } from "../../../configs/FirebaseConfig";
-import { Modal } from '@mui/material';
-import { Button, Text } from "../../base_components";
+import {BiBell} from 'react-icons/bi';
+import {Modal} from '@mui/material';
+import {Button, Text} from "../../base_components";
+import {RootState} from "../../../store/store";
+import {database} from "../../../configs/FirebaseConfig";
+import {get, ref, set, push, child} from "firebase/database";
 type NotificationMessage = {
-      id: string;
-      message: string;
-      planner_id: string;
-      project_contractor_id: string;
-      requestId: string;
-      supply_vendor_id: string;
+   id: string;
+   message: string;
+   planner_id: string;
+   project_contractor_id: string;
+   requestId: string;
+   supply_vendor_id: string;
 };
-
 const Notification = () => {
-   const dispatch = useDispatch();
-   const [notificationMessage, setNotificationMessage] = useState<{ [key: string]:NotificationMessage}>({});
-
-   const [open, setOpen] = useState<boolean>(false);
-
+   const [notificationMessage, setNotificationMessage] = useState<{ [key: string]: NotificationMessage }>({});
+   const [open, setOpen] = useState(false);
+   const limitedNotifications = Object.keys(notificationMessage)
+      .slice(-5)
+      .map(key => notificationMessage[key])
+      .reverse();
    const handleOpenModal = () => {
       setOpen(true)
    };
@@ -45,12 +45,16 @@ const Notification = () => {
          .catch((error) => {
             throw new Error(error);
          });
-   }, []);
+   }, [notificationMessage]);
 
    return (
-      <Box sx={{ color: 'action.active' }}>
-         <Badge color="secondary" variant="dot">
-            <BiBell size={30} className="text-B1" onClick={handleOpenModal} />
+      <Box sx={{color: 'action.active'}}>
+         <Badge color="secondary" variant="dot" className="hover:bg-gray-200">
+            <BiBell
+               size={30}
+               className="text-B1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+               onClick={handleOpenModal}
+            />
          </Badge>
          <Modal
             open={open}
@@ -60,17 +64,23 @@ const Notification = () => {
          >
             <div className={style.modalWrapper}>
                <div className={style.modalContent}>
-                  {Object.keys(notificationMessage).map((messageID) => (
-                     <div className={'flex flex-row gap-6 border border-BB py-3 px-3'}>
-                        <BiBell size={30} className="text-B1" onClick={handleOpenModal} />
-                        <Text size={'lg'} weight={'bold'} color={'pink'} key={messageID}>{notificationMessage[messageID].message}</Text>
-                     </div>
+                  {limitedNotifications.map(notification => (
+                     <Button
+                        key={notification.id}
+                        size={'xs'}
+                        theme={'NotiBtn'}
+                        iconLeft={<BiBell size={30} className="text-B1" onClick={handleOpenModal}/>}
+                        wrapperStyles={`px-50`}
+                        label={notification.message}
+                     ></Button>
                   ))}
-                  <Button
-                     label="CLOSE"
-                     {...style.buttonClose}
-                     onClick={handleCloseModal}
-                  />
+                  <div className={` w-full flex flex-row gap-5`}>
+                     <Button
+                        label="CLOSE"
+                        {...style.buttonClose}
+                        onClick={handleCloseModal}
+                     />
+                  </div>
                </div>
             </div>
          </Modal>
@@ -79,8 +89,8 @@ const Notification = () => {
 };
 
 const style = {
-   modalWrapper: "fixed top-[-57%] right-6 bottom-0 flex items-center bg-black bg-opacity-30",
-   modalContent: "bg-B2 rounded px-16 py-16 flex flex-col gap-7",
+   modalWrapper: "fixed top-[-34%] right-6 bottom-0 flex items-center focus:outline-none ",
+   modalContent: " w-[500px] bg-B2 rounded-lg px-5 py-16 flex flex-col gap-7",
    closeButton: "bg-gray-500 text-white px-4 py-2 rounded",
    submitBtn: {
       size: "lg" as "lg",
@@ -94,11 +104,12 @@ const style = {
       font: "B" as "B",
       wrapperStyles: "text-center lg:w-full xl:text-4xl 2xl:text-4xl"
    },
-   buttonClose:{
-      size:"xs" as "xs",
-      theme:"A" as "A",
-      wrapperStyles:"w-1/5 border border-G mt-7"
+   buttonClose: {
+      size: "xs" as "xs",
+      theme: "A" as "A",
+      wrapperStyles: "w-1/3 border border-P2 bg-P2  mt-7"
    },
 }
 
 export default Notification;
+
