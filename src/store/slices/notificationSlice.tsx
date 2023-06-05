@@ -34,8 +34,6 @@ const notificationSlice = createSlice({
 
 export const { addNotification, clearNotification } = notificationSlice.actions;
 
-export const selectNotificationsCount = (state: { notification: NotificationState }) =>
-   state.notification.notifications.length;
 
 
 export default notificationSlice.reducer;
