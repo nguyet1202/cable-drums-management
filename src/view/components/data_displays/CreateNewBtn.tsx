@@ -3,7 +3,6 @@ import { FiPlusCircle } from "react-icons/fi";
 import { useDispatch } from 'react-redux';
 import {openModal} from "../../../store/slices/modalSlice";
 type CreateBtnProps={
-   // onClick?: () => void
    wrapperStyles?:string;
 }
 const CreateNewBtn =(props:CreateBtnProps)=>{

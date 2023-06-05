@@ -25,14 +25,12 @@ const SupplyVendorRequest = () => {
    };
 
    fetchData();
-}, [userID]);
+}, []);
 
    const fetchSupplyVendorInfo = async (id: string) => {
       try {
          const contractSnapshot = await get(ref(database, `withdraw_requests/${id}`));
          const contractData = contractSnapshot.val();
-         console.log('có tồn tại không em',contractData)
-
          if (contractSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.contract_id}`));
             const vendorData = vendorSnapshot.val();

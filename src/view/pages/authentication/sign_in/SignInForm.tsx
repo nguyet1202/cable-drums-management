@@ -1,4 +1,4 @@
-import {useId, useState} from 'react';
+import {useState} from 'react';
 import { auth } from '../../../../configs/FirebaseConfig';
 import { signInWithEmailAndPassword, AuthError, UserCredential } from 'firebase/auth';
 import { ref, get } from 'firebase/database';
@@ -6,14 +6,13 @@ import { database } from '../../../../configs/FirebaseConfig';
 import { Button} from '../../../base_components';
 import { useNavigate } from "react-router-dom";
 import {FormAuthen} from "../../../components";
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+
 function SignInForm() {
    const [email, setEmail]= useState<string>('')
    const [password, setPassword]= useState<string>('')
    const [role, setRole] = useState<string>('');
-
    const navigate = useNavigate();
+
    const handleLogin = async () => {
       try {
          if (!email || !password || !role) {

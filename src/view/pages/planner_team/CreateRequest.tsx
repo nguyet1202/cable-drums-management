@@ -5,8 +5,6 @@ import {get, ref, set, push, child} from "firebase/database";
 import CreateRequestForm from "./CreateRequestForm";
 import { Modal} from '@mui/material';
 import { useDispatch } from "react-redux";
-import { addNotification } from "../../../store/slices/notificationSlice";
-import {setData} from "../../../store/slices/contractSlice";
 
 type CreateRequestProps = {
    onClose: () => void;
@@ -18,7 +16,7 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
    const [amount, setAmount] = useState<number>(0);
    const [supply_vendor_id, setSupply_vendor_id] = useState<string>('');
    const [planner_id, setPlanner_id] = useState<string>('');
-   const userID = localStorage.getItem('user');
+   const userID = localStorage.getItem('userID');
 
    const dispatch = useDispatch();
 
@@ -42,24 +40,30 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
          if (!contract_id || !project_contractor_id || !amount || !supply_vendor_id || !planner_id) {
             throw new Error("Please enter all required fields");
          }
+
          const snapshot = await get(ref(database, `contracts/${contract_id}`));
          const withdrawRequests = snapshot.val();
          const contractAmount = withdrawRequests.amount;
+
          if (Number(amount) > contractAmount) {
             alert("The entered amount exceeds the current available amount");
+            return;
          }
+
          const withdrawRequestsRef = ref(database, 'withdraw_requests');
          const newRequestRef = push(withdrawRequestsRef);
          const newRequestId = newRequestRef.key;
+
          const newRequest = {
             id: newRequestId,
-            planner_id:planner_id,
+            planner_id: planner_id,
             contract_id: contract_id,
             project_contractor_id: project_contractor_id,
             amount: amount,
             supply_vendor_id: supply_vendor_id,
             status: "new",
          };
+
          await set(newRequestRef, newRequest);
 
          const withdrawNotisRef = ref(database, 'notification');
@@ -71,10 +75,9 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
             requestId: newRequestId || '',
             supply_vendor_id: supply_vendor_id,
             project_contractor_id: project_contractor_id,
-            planner_id:planner_id,
-            message: "Planner team created a new request and assigned it to you"
+            planner_id: planner_id,
+            message: `Planner team created a new request ${newRequestId}`
          };
-         dispatch(addNotification(notification));
          await set(newNotiRef, notification);
          onClose();
          alert('success');
@@ -82,7 +85,6 @@ const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
          console.error('Error:', error);
       }
    };
-
    return (
       <Modal
          open={open}
