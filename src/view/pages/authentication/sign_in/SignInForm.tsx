@@ -35,30 +35,6 @@ function SignInForm() {
          console.error('Error:', errorCode, errorMessage);
       }
    };
-   // const validationSchema = Yup.object().shape({
-   //    role: Yup.string().required('Please choose your role'),
-   //    email: Yup.string().email('Invalid email').required('Please enter your email'),
-   //    password: Yup.string().required('Please enter your password'),
-   // });
-   //
-   // const formik = useFormik({
-   //    initialValues: {
-   //       role: role,
-   //       email: email,
-   //       password: password,
-   //    },
-   //    validationSchema,
-   //    onSubmit: handleLogin,
-   // });
-   // const handleEmailBlur = () => {
-   //    formik.setFieldTouched('email', true);
-   // };
-   // const handlePasswordBlur = () => {
-   //    formik.setFieldTouched('password', true);
-   // };
-   // const handleRoleBlur = () => {
-   //    formik.setFieldTouched('role', true);
-   // };
    return (
       <div className={`${style.wrapper}`}>
          <FormAuthen
@@ -70,11 +46,6 @@ function SignInForm() {
             onRoleChange={(event) => setRole(event.target.value)}
             onEmailChange={(event) => setEmail(event.target.value)}
             onPasswordChange={(event) => setPassword(event.target.value)}
-            // errors={formik.errors}
-            // touched={formik.touched}
-            // onEmailBlur={handleEmailBlur}
-            // onPasswordBlur={handlePasswordBlur}
-            // onRoleBlur={handleRoleBlur}
          />
          <Button type="button" {...style.submitBtn} label={'Login'} onClick={handleLogin} />
       </div>

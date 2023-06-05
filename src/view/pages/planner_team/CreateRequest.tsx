@@ -6,19 +6,22 @@ import CreateRequestForm from "./CreateRequestForm";
 import { Modal} from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import {closeModal} from "../../../store/slices/modalSlice";
-
-const CreateRequest = () => {
+type CreateRequestProps = {
+   onClose: () => void;
+   open: boolean;
+}
+const CreateRequest = ({  open, onClose }: CreateRequestProps) => {
    const [contract_id, setContract_id] = useState<string>('');
    const [project_contractor_id, setProject_contractor_id] = useState<string>('');
    const [amount, setAmount] = useState<number>(0);
    const [supply_vendor_id, setSupply_vendor_id] = useState<string>('');
 
-   const dispatch = useDispatch();
-   const showModal = useSelector((state: { modal:
-         { showModal: boolean } }) => state.modal.showModal);
-   const handleCloseModal = () => {
-      dispatch(closeModal());
-   };
+   // const dispatch = useDispatch();
+   // const showModal = useSelector((state: { modal:
+   //       { showModal: boolean } }) => state.modal.showModal);
+   // const handleCloseModal = () => {
+   //    dispatch(closeModal());
+   // };
    const CreateNewRequest = async () => {
       try {
          if (!contract_id || !project_contractor_id || !amount || !supply_vendor_id) {
@@ -26,9 +29,10 @@ const CreateRequest = () => {
          }
          const snapshot = await get(ref(database, `contracts/${contract_id}`));
          const withdrawRequests = snapshot.val();
-         const contractAmount = withdrawRequests.amount;
+         const contractAmount = withdrawRequests?.val()?.amount;
+         // const contractAmount = withdrawRequests.amount;
          if (Number(amount) > contractAmount) {
-            throw new Error("The entered amount exceeds the current available amount");
+            alert("The entered amount exceeds the current available amount");
          }
          const withdrawRequestsRef = ref(database, 'withdraw_requests');
          const newRequestRef = push(withdrawRequestsRef);
@@ -44,8 +48,8 @@ const CreateRequest = () => {
          };
 
          await set(newRequestRef, newRequest);
-         handleCloseModal();
-         console.log('success');
+         onClose();
+         alert('success');
       } catch (error) {
          console.error('Error:', error);
       }
@@ -53,8 +57,8 @@ const CreateRequest = () => {
 
    return (
       <Modal
-         open={showModal}
-         onClose={handleCloseModal}
+         open={open}
+         onClose={onClose}
          aria-labelledby="modal-title"
          aria-describedby="modal-description"
       >
@@ -75,7 +79,7 @@ const CreateRequest = () => {
             <Button
                label="CLOSE"
                {...style.buttonClose}
-               onClick={handleCloseModal}
+               onClick={onClose}
             />
             </div>
          </div>

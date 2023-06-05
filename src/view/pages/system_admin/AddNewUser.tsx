@@ -7,7 +7,6 @@ import { ref, set } from "firebase/database";
 import { Modal} from '@mui/material';
 import { useDispatch,useSelector } from 'react-redux';
 import {closeModal} from "../../../store/slices/modalSlice";
-
 type RegisterRole = "admin" | "supply_vendor" | "planner" | "project_contractor";
 
 const AddNewUser = () => {

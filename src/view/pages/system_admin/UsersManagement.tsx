@@ -42,6 +42,7 @@ const UsersManagement = () => {
       try {
          const userRef = ref(database, `users/${uid}`);
          await remove(userRef);
+         alert("succes")
       } catch (error) {
          console.error('Lỗi khi xóa người dùng:', error);
       }

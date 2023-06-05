@@ -66,7 +66,7 @@ const ContractorRequest = () => {
    };
 
    const handleOpenModal = (item: RequestData) => {
-      let id = item.contract_id || "";
+      let id = item.id || "";
       dispatch(setSelectedItemRequest(item));
       fetchContractorRequest(id);
       dispatch(openModal(true));

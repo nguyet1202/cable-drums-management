@@ -58,7 +58,7 @@ const InputSize = {
       },
    },
    md: {
-      wrapper: "w-full py-[13px] pl-[15px] pr-[100px] mt-2 ",
+      wrapper: "w-full py-[18px] px-[55px] mt-2 ",
       text: {
          size: "sm" as "sm",
          weight: "normal" as "normal"

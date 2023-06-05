@@ -9,7 +9,9 @@ const ButtonLogout =()=>{
          const authInstance = getAuth();
          await signOut(authInstance);
          navigate(`/signin`, { replace: true });
-         console.log('Sign out successful');
+         localStorage.removeItem('role');
+         localStorage.removeItem('userID');
+         alert('Sign out successful');
       } catch (error) {
          console.error('Sign out error:', error);
       }

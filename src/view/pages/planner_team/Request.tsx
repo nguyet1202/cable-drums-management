@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { child, get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
@@ -6,8 +6,11 @@ import {CreateRequest} from "./index";
 import { useDispatch } from 'react-redux';
 import {setSelectedItemRequest,setDataRequest,RequestData} from "../../../store/slices/requestSlice";
 import {openModal} from "../../../store/slices/modalSlice";
+import {FiPlusCircle} from "react-icons/fi";
+import {Button} from "../../base_components";
 const Request = () => {
    const dispatch = useDispatch();
+   const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
    useEffect(() => {
       const dbRef = ref(database);
       get(child(dbRef, `withdraw_requests`))
@@ -23,9 +26,9 @@ const Request = () => {
          });
    }, [setDataRequest]);
 
-   const fetchDetail = async (contract_id: string) => {
+   const fetchDetail = async (id: string) => {
       try {
-         const contractSnapshot = await get(ref(database, `withdraw_requests/${contract_id}`));
+         const contractSnapshot = await get(ref(database, `withdraw_requests/${id}`));
          const contractData = contractSnapshot.val();
 
          if (contractSnapshot.exists()) {
@@ -61,15 +64,24 @@ const Request = () => {
 
    const handleOpenModal = (item: RequestData) => {
       dispatch(setSelectedItemRequest(item));
-      fetchDetail(item.contract_id);
+      let id = item.id || "";
+      fetchDetail(id);
       dispatch(openModal(true));
+   };
+   const opendetailModal = () => {
+      setShowModalCreate(true);
    };
    return (
       <div className={`${style.wrapper}`}>
-         <CreateNewBtn wrapperStyles={`${style.btnCreate}`} />
+         <Button
+            iconLeft={<FiPlusCircle size={50} />}
+            label="Create new"
+            {...style.button}
+            onClick={opendetailModal}
+         />
          <RequestList handleOpenModal={handleOpenModal} />
          <ModalRequestDetail />
-         <CreateRequest />
+         <CreateRequest open={showModalCreate} onClose={() => setShowModalCreate(false)}/>
 
       </div>
    );
@@ -77,10 +89,15 @@ const Request = () => {
 
 const style = {
    wrapper: "w-full flex flex-col bg-W 2xl:px-32 flex items-center justify-center xl:px-16 xs:px-5 lg:px-3 ",
-   button: {
-      size: "xs" as "xs",
-      theme: "A" as "A",
-      wrapperStyles: "py-0 px-0 left-[8%]"
+   buttoncreate:{
+      wrapper:" w-1/10 flex item-end mb-5 mr-[-70%] ",
+
+   },
+   button:{
+      size:"base" as "base",
+      theme:"A" as "A",
+      wrapperStyles:"flex item-end mb-5 left-[35%]",
+      wrapperIconStyles:"left-[75%]"
    },
    btnCreate: "left-[0%]",
 }

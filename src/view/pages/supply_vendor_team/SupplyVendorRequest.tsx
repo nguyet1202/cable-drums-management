@@ -66,7 +66,8 @@ const SupplyVendorRequest = () => {
 
    const handleOpenModal = (item: RequestData) => {
       dispatch(setSelectedItemRequest(item));
-      fetchSupplyVendorInfo(item.contract_id);
+      let id = item.id || "";
+      fetchSupplyVendorInfo(id);
       dispatch(openModal(true));
    };
 
