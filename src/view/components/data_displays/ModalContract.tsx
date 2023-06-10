@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useDispatch,useSelector } from 'react-redux';
 import {closeModal} from "../../../store/slices/modalSlice";
+import {RootState} from "../../../store/store";
 
 const ModalContract = () => {
    const selectedItem = useSelector((state: { contract:

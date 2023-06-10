@@ -1,5 +1,4 @@
 import {Modal} from '@mui/material';
-import {RequestData} from "../../../store/slices/requestSlice";
 import {Button, Text} from "../../base_components";
 import {styled} from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -11,12 +10,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useDispatch, useSelector} from "react-redux";
 import {closeModal} from "../../../store/slices/modalSlice";
+import {RootState} from "../../../store/store";
 const ModalRequestDetail = () => {
-   const selectedItem = useSelector((state: { request:
-         { selectedItem: RequestData | null } }) => state.request.selectedItem);
+   const selectedItem = useSelector((state: RootState) => state.request.selectedItem);
+   const showModal = useSelector((state: RootState) => state.modal.showModal);
    const dispatch = useDispatch();
-   const showModal = useSelector((state: { modal:
-         { showModal: boolean } }) => state.modal.showModal);
    const handleCloseModal = () => {
       dispatch(closeModal());
    };

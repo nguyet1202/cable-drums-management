@@ -25,8 +25,8 @@ const ContractSlice = createSlice({
    name: 'contract ',
    initialState,
    reducers: {
-      setData: (state, action: PayloadAction<{ [key: string]: ContractData }>) => {
-         state.data = action.payload;
+      setData: (state, action: PayloadAction<{ [key: string]: ContractData } | null>) => {
+         state.data = action.payload ?? {};
       },
       setSelectedItem: (state, action: PayloadAction<ContractData | null>) => {
          state.selectedItem = action.payload;

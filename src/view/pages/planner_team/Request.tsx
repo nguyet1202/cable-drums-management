@@ -1,30 +1,28 @@
-import { useEffect,useState } from "react";
-import { child, get, ref } from "firebase/database";
+import React, {useState } from "react";
+import { get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
-import {CreateNewBtn, ModalRequestDetail,RequestList} from "../../components";
+import { ModalRequestDetail,RequestList} from "../../components";
 import {CreateRequest} from "./index";
-import { useDispatch } from 'react-redux';
 import {setSelectedItemRequest,setDataRequest,RequestData} from "../../../store/slices/requestSlice";
 import {openModal} from "../../../store/slices/modalSlice";
 import {FiPlusCircle} from "react-icons/fi";
 import {Button} from "../../base_components";
+import {useDispatch} from "react-redux";
+import {useGetData} from "../../../hooks";
 const Request = () => {
    const dispatch = useDispatch();
    const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
-   useEffect(() => {
-      const dbRef = ref(database);
-      get(child(dbRef, `withdraw_requests`))
-         .then((snapshot) => {
-            if (snapshot.exists()) {
-               dispatch(setDataRequest(snapshot.val()));
-            } else {
-               dispatch(setDataRequest(snapshot.val()));
-            }
-         })
-         .catch((error) => {
-            throw new Error(error);
-         });
-   }, [setDataRequest]);
+   const getDataAllContract = useGetData('withdraw_requests', (snapshot) => {
+      if (snapshot.exists()) {
+         dispatch(setDataRequest(snapshot.val()));
+      } else {
+         console.log('No data available');
+      }
+   });
+
+   if (getDataAllContract) {
+      return <div>Loading...</div>;
+   }
 
    const fetchDetail = async (id: string) => {
       try {
@@ -63,8 +61,8 @@ const Request = () => {
    };
 
    const handleOpenModal = (item: RequestData) => {
-      dispatch(setSelectedItemRequest(item));
       let id = item.id || "";
+      dispatch(setSelectedItemRequest(item));
       fetchDetail(id);
       dispatch(openModal(true));
    };

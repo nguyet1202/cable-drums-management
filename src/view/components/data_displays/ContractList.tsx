@@ -2,14 +2,14 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper}
 import {Button, Text} from "../../base_components";
 import {ContractData} from "../../pages/planner_team/Contract";
 import {useSelector} from "react-redux";
-
+import {RootState} from "../../../store/store";
 type ContractListProps = {
    handleOpenModal: (item: ContractData) => void;
 };
 
 const ContractList = (props:ContractListProps) => {
-   const data = useSelector((state: { contract:
-         { data: { [key: string]: ContractData }} }) => state.contract.data);
+   const data = useSelector((state: RootState) => state.contract.data);
+   console.log('data ne',data)
    return (
       <TableContainer component={Paper}>
          <Table>

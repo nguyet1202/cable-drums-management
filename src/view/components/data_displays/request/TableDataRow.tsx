@@ -20,7 +20,7 @@ type TableDataRowProps = {
 
 const TableDataRow = (props: TableDataRowProps) => {
    const userRole = localStorage.getItem('role');
-
+   console.log(userRole)
    return (
       <TableRow key={props.request.id}>
          <TableCell component="th" scope="row" align="center">
@@ -28,8 +28,8 @@ const TableDataRow = (props: TableDataRowProps) => {
          </TableCell>
          <TableCell align="center">{props.request.contract_id}</TableCell>
          <TableCell align="center">{props.request.amount}</TableCell>
-         <TableCell align="center">{props.request.project_contractor_id}</TableCell>
          <TableCell align="center">{props.request.supply_vendor_id}</TableCell>
+         <TableCell align="center">{props.request.project_contractor_id}</TableCell>
          <TableCell align="center">
             {userRole === "planner" ? (
                <Text color="black" weight="bold">{props.request.status}</Text>
@@ -41,7 +41,7 @@ const TableDataRow = (props: TableDataRowProps) => {
                   value={props.status}
                   onChange={props.onChangeVendor}
                >
-                  <option>Status</option>
+                  <option >Status</option>
                   <option value="ready_collect">Ready to Collect</option>
                </Select>
             ) : userRole === "project_contractor" && props.selected ? (
@@ -52,7 +52,7 @@ const TableDataRow = (props: TableDataRowProps) => {
                   value={props.status}
                   onChange={props.onchangeContract}
                >
-                  <option>Status</option>
+                  <option >Status</option>
                   <option value="collected">Collected</option>
                </Select>
             ) : (

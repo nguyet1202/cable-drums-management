@@ -20,18 +20,18 @@ const SupplyVendorRequest = () => {
          const contractsData = requestsSnapshot.val();
          dispatch(setDataRequest(contractsData));
       } catch (error) {
-         console.error('Lỗi khi truy vấn dữ liệu:', error);
+         dispatch(setDataRequest(null));
       }
    };
 
    fetchData();
 }, []);
 
-   const fetchSupplyVendorInfo = async (id: string) => {
+   const fetchSupplyVendorRequest = async (id: string) => {
       try {
-         const contractSnapshot = await get(ref(database, `withdraw_requests/${id}`));
-         const contractData = contractSnapshot.val();
-         if (contractSnapshot.exists()) {
+         const RequestSnapshot = await get(ref(database, `withdraw_requests/${id}`));
+         const contractData = RequestSnapshot.val();
+         if (RequestSnapshot.exists()) {
             const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.contract_id}`));
             const vendorData = vendorSnapshot.val();
             if (vendorSnapshot.exists()) {
@@ -55,17 +55,17 @@ const SupplyVendorRequest = () => {
                }
             }
          } else {
-            throw new Error("Contract not found");
+            dispatch(setSelectedItemRequest(null));
          }
-      } catch (error: unknown) {
-         throw new Error(String(error));
+      } catch (error) {
+         console.log(error)
       }
    };
 
    const handleOpenModal = (item: RequestData) => {
       dispatch(setSelectedItemRequest(item));
       let id = item.id || "";
-      fetchSupplyVendorInfo(id);
+      fetchSupplyVendorRequest(id);
       dispatch(openModal(true));
    };
 

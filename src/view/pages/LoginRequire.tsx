@@ -1,4 +1,4 @@
-import {Button, Text} from "../view";
+import {Button, Text} from "../index";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 

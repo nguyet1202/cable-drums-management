@@ -27,18 +27,18 @@ const SignInText = () => {
 const style = {
    wrapper: "flex flex-col justify-center items-center gap-5",
    bigtext:{
-      size:"4xl" as "4xl",
+      size:"6xl" as "6xl",
       weight:"extrabold" as "extrabold",
       color:"pink" as "pink",
       font:"A" as "A",
-      wrapperStyles:"lg:w-full xl:text-4xl 2xl:text-5xl"
+      wrapperStyles:"w-full "
    },
    smalltext:{
-      size:"lg" as "lg",
+      size:"3xl" as "3xl",
       weight:"normal" as "normal",
       color:"black" as "black",
       font:"A" as "A",
-      wrapperStyles:"xl:text-xl 2xl:text-2xl "
+      wrapperStyles:" "
    }
 
 }

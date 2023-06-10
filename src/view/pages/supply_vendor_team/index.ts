@@ -1,4 +1,5 @@
 import SupplyVendorHome from "./SupplyVendorHome";
 import SupplyTeamContract from "./SupplyTeamContract";
 import SupplyVendorRequest from "./SupplyVendorRequest";
-export {SupplyVendorHome,SupplyTeamContract,SupplyVendorRequest}
+import SupplyDashBoard from "./SupplyDashBoard";
+export {SupplyVendorHome,SupplyTeamContract,SupplyVendorRequest,SupplyDashBoard}
