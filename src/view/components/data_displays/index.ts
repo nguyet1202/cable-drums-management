@@ -1,6 +1,5 @@
 import ButtonLogout from "./ButtonLogout";
 import CreateNewBtn from "./CreateNewBtn";
-import FormAuthen from "./FormAuthen";
 import ContractList from "./ContractList";
 import ModalContract from "./ModalContract";
 import InforUser from "./InforUser";
@@ -9,6 +8,6 @@ import ModalRequestDetail from "./ModalRequestDetail";
 import RequestList from "./RequestList";
 export {
    ButtonLogout,ModalRequestDetail,
-   CreateNewBtn,FormAuthen,ContractList,
+   CreateNewBtn,ContractList,
    ModalContract,InforUser,Notification,RequestList
 }

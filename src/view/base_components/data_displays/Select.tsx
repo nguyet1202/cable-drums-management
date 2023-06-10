@@ -40,7 +40,7 @@ const SelectTheme = {
       wrapper: "bg-B1 rounded-lg shadow-lg",
    },
    requestform:{
-      wrapper:"border-b-2 border-gray-300 py-2 px-4 w-full focus:outline-none focus:border-green-500"
+      wrapper:"border-b-[1px] border-G py-2 px-4 w-full focus:outline-none focus:border-B1"
    }
 };
 
@@ -51,11 +51,8 @@ const SelectSize = {
    sm: {
       wrapper: "w-full px-[30px] py-[12px]",
    },
-   base: {
-      wrapper: "",
-   },
    md: {
-      wrapper: "w-full px-[50px] py-[12px]",
+      wrapper: " w-[400px] py-[18px] px-[30px]",
    },
    lg: {
       wrapper: "w-full px-[50px] py-[10px]",

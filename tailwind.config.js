@@ -22,7 +22,8 @@ module.exports = {
       "P":"#F03A76",
       "P2":"#FF90B5",
       "P3":"#FFD4E2",
-      "GR":"#008000"
+      "GR":"#008000",
+      "GB":"#348888",
     },
 
     fontWeight: {

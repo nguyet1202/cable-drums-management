@@ -1,4 +1,4 @@
 import ProjectContractorHome from "./ProjectContractorHome";
-import ContractorMainSideBar from "./ContractorMainSideBar";
+import ContractorDashBoard from "./ContractorDashBoard";
 import ContractorRequest from "./ContractorRequest";
-export {ProjectContractorHome,ContractorMainSideBar,ContractorRequest}
+export {ProjectContractorHome,ContractorDashBoard,ContractorRequest}

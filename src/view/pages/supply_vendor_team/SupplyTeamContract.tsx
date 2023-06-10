@@ -28,7 +28,7 @@ const SupplyTeamContract = () => {
       fetchData();
    }, [userID]);
 
-   const fetchSupplyVendorInfo = async (id: string) => {
+   const fetchSupplyVendorContract = async (id: string) => {
       try {
          const contractSnapshot = await get(ref(database, `contracts/${id}`));
          const contractData = contractSnapshot.val();
@@ -57,7 +57,7 @@ const SupplyTeamContract = () => {
    const handleOpenModal = (item: ContractData) => {
       let id = item.id || "";
       setSelectedItem(item);
-      fetchSupplyVendorInfo(id);
+      fetchSupplyVendorContract(id);
       dispatch(openModal(true));
    };
 

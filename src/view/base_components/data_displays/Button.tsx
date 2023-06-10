@@ -82,16 +82,29 @@ const ButtonTheme = {
       }
    },
    NotiBtn: {
-      wrapper: "bg-W rounded text-P rounded-lg shadow-lg",
+      wrapper: "text-P ",
       text: {
-         color:"black" as "black",
+         color:"gray" as "gray",
          size:"xs" as "xs",
-         styles:"w-[90%]"
+         styles:"w-[70%]"
+      }
+   },
+   logoutBtn: {
+      wrapper: "rounded text-W rounded-lg shadow-xl",
+      text: {
+         color:"white" as "white",
+         styles:""
       }
    },
 }
-
 const ButtonSize = {
+   xxs:{
+      wrapper: " px-[0px] py-[0px] ",
+      text: {
+         size: "md" as "md",
+         weight: "normal" as "normal"
+      },
+   },
    xs: {
       wrapper: " px-[0px] py-[12px] ",
       text: {
@@ -131,4 +144,4 @@ const ButtonSize = {
 
 export default Button
 
-export {type ButtonProps, ButtonSize, ButtonTheme}
+export type {ButtonProps, ButtonSize, ButtonTheme};

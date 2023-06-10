@@ -7,13 +7,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {FaTrashAlt} from "react-icons/fa";
-import {useState, useEffect} from "react";
-import {child, get, ref, remove} from "firebase/database";
+import {useState} from "react";
+import {ref, remove} from "firebase/database";
 import {database} from "../../../configs/FirebaseConfig";
 import {CreateNewBtn} from "../../components";
 import {AddNewUser} from "./index";
-import { useDispatch,useSelector } from "react-redux";
-import {RootState} from "../../../store/store";
+
+import {useGetData} from "../../../hooks";
 type UserData = {
    uid: string;
    email: string;
@@ -23,23 +23,17 @@ type UserData = {
 
 const UsersManagement = () => {
    const [data, setData] = useState<{ [key: string]: UserData }>({});
+   const getDataUser = useGetData('users', (snapshot) => {
+      if (snapshot.exists()) {
+         setData(snapshot.val());
+      } else {
+         console.log('No data available');
+      }
+   });
 
-   useEffect(() => {
-      const dbRef = ref(database);
-      get(child(dbRef, `users`))
-         .then((snapshot) => {
-            if (snapshot.exists()) {
-               setData(snapshot.val());
-            } else {
-               alert("No data available");
-            }
-         })
-         .catch((error) => {
-            alert(error);
-         });
-   }, [data]);
-
-
+   if (getDataUser) {
+      return <div>Loading...</div>;
+   }
    const handleDeleteUser = async (uid:string) => {
       try {
          const userRef = ref(database, `users/${uid}`);

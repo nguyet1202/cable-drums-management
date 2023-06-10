@@ -8,7 +8,7 @@ type LeftLayoutProps={
    label:string,
    onClick?: () => void,
 }
-const LeftLayout=(props:LeftLayoutProps)=>{
+const LeftLayoutTheme1=(props:LeftLayoutProps)=>{
 
    return(
       <section className={`${style.wrapper}`} >
@@ -42,4 +42,4 @@ const style={
       }
    }
 }
-export default LeftLayout
+export default LeftLayoutTheme1

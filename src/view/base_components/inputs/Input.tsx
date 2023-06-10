@@ -7,9 +7,11 @@ type InputProps = {
    type?:string
    wrapperStyles?:string
    value?: string
+   name?:string
    defauvalue?:string
    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
    onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+   id?:string
 }
 
 function Input(props: InputProps) {
@@ -28,29 +30,16 @@ function Input(props: InputProps) {
          <input className={`${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}
                 placeholder={props.label} type={props.type}
                 value={props.value} defaultValue={props.defauvalue} onChange={props.onChange} onBlur={props.onBlur}
+                id={props.id}
          />
       </label>
    )
 }
 
 const style = {
-   label: "relative"
+   label: "relative focus:outline-none"
 }
 const InputSize = {
-   xs: {
-      wrapper: "",
-      text: {
-         size: "sm" as "sm",
-         weight: "normal" as "normal"
-      },
-   },
-   sm: {
-      wrapper: "",
-      text: {
-         size: "sm" as "sm",
-         weight: "normal" as "normal"
-      },
-   },
    base: {
       wrapper: "py-2 px-4 w-full",
       text: {
@@ -59,8 +48,9 @@ const InputSize = {
       },
    },
    md: {
-      wrapper: "w-full py-[18px] px-[55px] mt-2 ",
+      wrapper: "w-[400px] py-[18px] px-[30px] mt-2 focus:outline-none  ",
       text: {
+         color:"pink" as "pink",
          size: "sm" as "sm",
          weight: "normal" as "normal"
       },
@@ -75,10 +65,11 @@ const InputSize = {
 }
 const InputTheme = {
    primary:{
-      wrapper:"bg-B2 rounded-lg text-G font-font",
+      wrapper:"bg-W rounded-lg font-font border-G border-[1px]",
       text: {
-         color: "black" as "black",
-         styles:"hidden"
+         color: "pink" as "pink",
+         styles:"hidden",
+         weight:"bold" as "bold"
       }
    },
    secondary:{
@@ -89,7 +80,7 @@ const InputTheme = {
       }
    },
    formInput:{
-      wrapper:"border-b-[0.5px] border-G  focus:outline-none focus:border-P",
+      wrapper:"border-b-[1px] border-G  focus:outline-none focus:border-B1",
       text: {
          color: "black" as "black",
          styles:""

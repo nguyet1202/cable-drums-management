@@ -1,29 +1,26 @@
-import { useEffect } from "react";
-import { child, get, ref } from "firebase/database";
+// import { get, ref } from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import {ContractList} from "../../components";
 import {ModalContract} from "../../components";
 import { useDispatch } from 'react-redux';
 import {setSelectedItem,setData,ContractData} from "../../../store/slices/contractSlice";
 import {openModal} from "../../../store/slices/modalSlice";
-
+import {useGetData} from "../../../hooks";
+import { useEffect } from "react";
+import { child, get, ref } from "firebase/database";
 const Contract = () => {
    const dispatch = useDispatch();
+   const getDataAllContract = useGetData('contracts', (snapshot) => {
+      if (snapshot.exists()) {
+         dispatch(setData(snapshot.val()));
+      } else {
+         console.log('No data available');
+      }
+   });
 
-   useEffect(() => {
-      const dbRef = ref(database);
-      get(child(dbRef, `contracts`))
-         .then((snapshot) => {
-            if (snapshot.exists()) {
-               dispatch(setData(snapshot.val()));
-            } else {
-               throw new Error("No data available");
-            }
-         })
-         .catch((error) => {
-            throw new Error(error);
-         });
-   }, []);
+   if (getDataAllContract) {
+      return <div>Loading...</div>;
+   }
 
    const fetchSupplyVendorInfo = async (id: string) => {
       try {

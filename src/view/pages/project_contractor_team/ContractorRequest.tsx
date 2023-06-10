@@ -2,12 +2,13 @@ import {useEffect } from "react";
 import { equalTo, get, orderByChild, query, ref} from "firebase/database";
 import { database } from "../../../configs/FirebaseConfig";
 import { ModalRequestDetail,RequestList} from "../../components";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setSelectedItemRequest,setDataRequest,RequestData} from "../../../store/slices/requestSlice";
 import {openModal} from "../../../store/slices/modalSlice";
 const ContractorRequest = () => {
    const dispatch = useDispatch();
    const userID = localStorage.getItem('userID');
+
    useEffect(() => {
       const fetchData = async () => {
          try {
@@ -19,10 +20,9 @@ const ContractorRequest = () => {
             const requestsQuery = query(requestsRef, orderByChild("project_contractor_id"), equalTo(project_contractor_id));
             const requestsSnapshot = await get(requestsQuery);
             const contractsData = requestsSnapshot.val();
-            console.log()
             dispatch(setDataRequest(contractsData));
          } catch (error) {
-            console.error('Lỗi khi truy vấn dữ liệu:', error);
+            dispatch(setDataRequest(null));
          }
       };
 
@@ -35,11 +35,11 @@ const ContractorRequest = () => {
          const contractData = contractSnapshot.val();
 
          if (contractSnapshot.exists()) {
-            const vendorSnapshot = await get(ref(database, `supply_vendors/${contractData.project_contractor_id}`));
-            const vendorData = vendorSnapshot.val();
+            const vendorSnapshot = await get(ref(database, `project_contractors/${contractData.project_contractor_id}`));
+            const ProjectorData = vendorSnapshot.val();
             if (vendorSnapshot.exists()) {
-               const ProjectorSnapshot = await get(ref(database, `project_contractors/${contractData.project_contractor_id}`));
-               const ProjectorData = ProjectorSnapshot.val();
+               const ProjectorSnapshot = await get(ref(database, `supply_vendors/${contractData.supply_vendors}`));
+               const vendorData = ProjectorSnapshot.val();
 
                if (vendorSnapshot.exists()) {
                   dispatch(setSelectedItemRequest({

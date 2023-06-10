@@ -2,23 +2,20 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper}
 import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import { database } from "../../../configs/FirebaseConfig";
-import {get, ref, set, push, child} from "firebase/database";
+import {get, ref, set, push} from "firebase/database";
 import { RequestData } from "../../../store/slices/requestSlice";
 import {TableDataRow,TableHeaderCell} from "./request";
-import { useDispatch } from "react-redux";
+import {RootState} from "../../../store/store";
 type RequestListProps = {
    handleOpenModal: (item: RequestData) => void;
 };
 
 const RequestList = (props:RequestListProps) => {
-   const data = useSelector((state: {
-      request: { data: { [key: string]: RequestData } };
-   }) => state.request.data);
+   const data = useSelector((state: RootState) => state.request.data);
    const [status, setStatus] = useState<string>("");
    const [selectedRows, setSelectedRows] = useState<{ [key: string]: boolean }>({});
    const userRole = localStorage.getItem("role");
-   const [reloadComponent, setReloadComponent] = useState(false);
-
+   const [reloadComponent, setReloadComponent] = useState(true);
    const handleSelectRow = (requestID: string) => {
       setSelectedRows((prevSelectedRows) => ({
          ...prevSelectedRows,
@@ -40,18 +37,22 @@ const RequestList = (props:RequestListProps) => {
             alert(`Contract with ID ${contractId} does not exist`);
          }
       } catch (error) {
-         alert(error);
+         console.log(error);
       }
+
    };
 
    const updateRequestStatus = async (requestId: string) => {
       try {
-         if (status === null) {
+         if (status === "") {
             alert("Status cannot be null");
          }
          const requestRef = ref(database, `withdraw_requests/${requestId}`);
          const snapshot = await get(requestRef);
          const currentData = snapshot.val();
+         const supply_vendor_id = currentData.supply_vendor_id;
+         const project_contractor_id = currentData.project_contractor_id;
+         const planner_id = currentData.planner_id;
          if (currentData.status === "collected") {
             alert("You cannot update");
          }
@@ -62,23 +63,7 @@ const RequestList = (props:RequestListProps) => {
                ...prevSelectedRows,
                [requestId]: false,
             }));
-
-            const withdrawNotisRef = ref(database, "notification");
-            const newNotiRef = push(withdrawNotisRef);
-            const newNotiId = newNotiRef.key;
-            const message =
-               userRole === "project_contractor"
-                  ? `project contractor updated the status of request ${requestId}`
-                  : `supply vendor updated the status of request ${requestId}`;
-            const notification = {
-               id: newNotiId || "",
-               requestId: requestId || "",
-               supply_vendor_id: currentData.supply_vendor_id,
-               project_contractor_id: currentData.project_contractor_id,
-               planner_id: currentData.planner_id,
-               message: message,
-            };
-            await set(newNotiRef, notification);
+            pushNotification(requestId, supply_vendor_id, project_contractor_id, planner_id);
             setReloadComponent(true);
             if (status === "collected") {
                await updateContractAmount(currentData.contract_id, currentData.amount);
@@ -91,6 +76,24 @@ const RequestList = (props:RequestListProps) => {
       }
    };
 
+   const pushNotification =async(requestId:string,supply_vendor_id:string,project_contractor_id:string,planner_id:string)=>{
+      const withdrawNotisRef = ref(database, "notification");
+      const newNotiRef = push(withdrawNotisRef);
+      const newNotiId = newNotiRef.key;
+      const message =
+         userRole === "project_contractor"
+            ? `project contractor updated the status of request ${requestId}`
+            : `supply vendor updated the status of request ${requestId}`;
+      const notification = {
+         id: newNotiId || "",
+         requestId: requestId || "",
+         supply_vendor_id: supply_vendor_id,
+         project_contractor_id: project_contractor_id,
+         planner_id: planner_id,
+         message: message,
+      };
+      await set(newNotiRef, notification);
+   }
 
    useEffect(() => {
       if (reloadComponent) {
