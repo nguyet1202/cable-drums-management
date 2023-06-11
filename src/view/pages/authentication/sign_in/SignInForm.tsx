@@ -27,7 +27,6 @@ function SignInForm() {
          if (userData && userData.role === formik.values.role) {
             localStorage.setItem('role', formik.values.role);
             const userRole = localStorage.getItem('role');
-            console.log(userRole);
             navigate(`/${formik.values.role}`, { replace: true });
          } else {
             alert("Invalid user role");

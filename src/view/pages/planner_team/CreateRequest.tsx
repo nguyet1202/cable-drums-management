@@ -24,7 +24,6 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
          console.log('No data available');
       }
    });
-   console.log(planner_id)
    const CreateNewRequest = async () => {
       try {
          const snapshot = await get(ref(database, `contracts/${formik.values.contract_id}`));
@@ -77,7 +76,7 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
             supply_vendor_id,
             project_contractor_id,
             planner_id,
-            message: `Planner team created a new request ${newRequestId}`,
+            message: `Planner team ${planner_id} created a new request ${newRequestId}`,
          };
 
          await set(newNotiRef, notification);
@@ -117,10 +116,10 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
    return (
       <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-description">
          <div className={style.wrapper}>
-            <div className={style.modalContent}>
+            <form className={style.modalContent} onSubmit={formik.handleSubmit}>
                <div>
                   <Text {...style.formtitle}>Request For Withdraw Cable Drum</Text>
-                  <div className={style.formcontent}>
+                  <div className={style.formcontent} >
                      <div className="w-1/2 pr-40">
                         <div className="mb-6">
                            <Text {...style.textfield}>Contract ID</Text>
@@ -216,10 +215,10 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
                   </div>
                </div>
                <div className={`flex flex-row gap-8`}>
-                  <Button type="submit" {...style.submitBtn} label={'Submit'} onClick={CreateNewRequest} />
+                  <Button type="submit"{...style.submitBtn} label={'Submit'}/>
                   <Button label="CLOSE" {...style.buttonClose} onClick={onClose} />
                </div>
-            </div>
+            </form>
          </div>
       </Modal>
    );

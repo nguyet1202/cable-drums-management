@@ -15,7 +15,6 @@ const ContractorRequest = () => {
             const userDataSnapshot = await get(ref(database, `users/${userID}`));
             const userData = userDataSnapshot.val();
             const project_contractor_id = userData.project_contractor_id;
-            console.log(project_contractor_id)
             const requestsRef = ref(database, "withdraw_requests");
             const requestsQuery = query(requestsRef, orderByChild("project_contractor_id"), equalTo(project_contractor_id));
             const requestsSnapshot = await get(requestsQuery);

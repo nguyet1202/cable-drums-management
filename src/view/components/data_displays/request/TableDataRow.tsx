@@ -20,7 +20,6 @@ type TableDataRowProps = {
 
 const TableDataRow = (props: TableDataRowProps) => {
    const userRole = localStorage.getItem('role');
-   console.log(userRole)
    return (
       <TableRow key={props.request.id}>
          <TableCell component="th" scope="row" align="center">
