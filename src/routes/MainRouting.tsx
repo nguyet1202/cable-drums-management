@@ -19,11 +19,11 @@ const MainRouting = () => {
    }
    return (
       <Routes>
+         <Route path="/login-require" element={<LoginRequire/>}/>
+         <Route path="/signin" element={<SignIn/>}/>
          <Route element={<MainLayout/>}>
             <Route path="/" element={isAuthenticated ? <Navigate to={`/${userRole}`} replace={true}/> :
                <Navigate to="/signin" replace={true}/>}/>
-            <Route path="/login-require" element={<LoginRequire/>}/>
-            <Route path="/signin" element={<SignIn/>}/>
 
             <Route element={<AdminDashBoard/>}>
                <Route path="/admin"

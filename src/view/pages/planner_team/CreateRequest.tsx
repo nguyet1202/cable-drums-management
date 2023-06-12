@@ -16,6 +16,8 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
    const [planner_id, setPlanner_id] = useState<string>('');
    const userID = localStorage.getItem('userID');
    let contractAmount = 0;
+   const currentDate = new Date();
+   const formattedDateTime = currentDate.toLocaleString();
    const getDataGetPlanner = useGetData(`users/${userID}`, (snapshot) => {
       if (snapshot.exists()) {
          const getPlannerID = snapshot.val();
@@ -35,21 +37,21 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
          const withdrawRequestsRef = ref(database, 'withdraw_requests');
          const newRequestRef = push(withdrawRequestsRef);
          const newRequestId = newRequestRef.key;
-
          const newRequest = {
             id: newRequestId || '',
             planner_id,
             contract_id: formik.values.contract_id,
             project_contractor_id: formik.values.project_contractor_id,
             amount: formik.values.amount,
-            supply_vendor_id: formik.values.supply_vendor_id,
+            supply_vendor_id: withdrawRequests.supply_vendor_id,
             status: 'new',
+            created_at: formattedDateTime,
          };
 
          await set(newRequestRef, newRequest);
 
          if (newRequestId) {
-            await pushNotification(newRequestId, formik.values.supply_vendor_id, formik.values.project_contractor_id, planner_id);
+            await pushNotification(newRequestId, withdrawRequests.supply_vendor_id, formik.values.project_contractor_id, planner_id);
          }
 
          onClose();
@@ -63,7 +65,7 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
       newRequestId: string,
       supply_vendor_id: string,
       project_contractor_id: string,
-      planner_id: string
+      planner_id: string,
    ) => {
       try {
          const withdrawNotisRef = ref(database, 'notification');
@@ -76,6 +78,7 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
             supply_vendor_id,
             project_contractor_id,
             planner_id,
+            created_at: formattedDateTime,
             message: `Planner team ${planner_id} created a new request ${newRequestId}`,
          };
 
@@ -88,9 +91,7 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
    const initialValues = {
       amount: 0,
       contract_id: '',
-      supply_vendor_id: '',
       project_contractor_id: '',
-      planner_id: planner_id,
    };
 
    const validationSchema = Yup.object({
@@ -99,7 +100,6 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
          .moreThan(0, 'Amount must be greater than 0')
          .required('Amount is required'),
       contract_id: Yup.string().required('Contract ID is required'),
-      supply_vendor_id: Yup.string().required('Supply Team is required'),
       project_contractor_id: Yup.string().required('Project Contractor ID is required'),
    });
 
@@ -161,26 +161,6 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
                      <div className="w-1/2">
                         <div className={`flex flex-row gap-10`}>
                            <div className="mb-6">
-                              <Text {...style.textfield}>Supply Team</Text>
-                              <Select
-                                 theme={'requestform'}
-                                 id="supply_vendor_id"
-                                 name="supply_vendor_id"
-                                 value={formik.values.supply_vendor_id}
-                                 onChange={formik.handleChange}
-                                 onBlur={formik.handleBlur}
-                                 {...style.select}
-                              >
-                                 <option></option>
-                                 <option value="1">vendor 1</option>
-                                 <option value="2">vendor 2</option>
-                                 <option value="3">vendor 3</option>
-                              </Select>
-                              {formik.touched.supply_vendor_id && formik.errors.supply_vendor_id && (
-                                 <Text {...style.textError}>{formik.errors.supply_vendor_id}</Text>
-                              )}
-                           </div>
-                           <div className="mb-6">
                               <Text {...style.textfield}>Project Contractor ID</Text>
                               <Select
                                  theme={'requestform'}
@@ -200,16 +180,6 @@ const CreateRequest = ({ open, onClose }: CreateRequestProps) => {
                                  <Text {...style.textError}>{formik.errors.project_contractor_id}</Text>
                               )}
                            </div>
-                        </div>
-                        <div className="mb-6">
-                           <Text {...style.textfield}>Planner ID</Text>
-                           <Input
-                              id="planner_id"
-                              name="planner_id"
-                              type="text"
-                              defauvalue={planner_id}
-                              {...style.input}
-                           />
                         </div>
                      </div>
                   </div>

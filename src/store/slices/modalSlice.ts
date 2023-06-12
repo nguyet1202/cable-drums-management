@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ModalState {
+type ModalState ={
    showModal: boolean;
 }
 

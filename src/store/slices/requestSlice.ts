@@ -16,7 +16,7 @@ type RequestData = {
    project_contractor_email: string;
 };
 
-interface RequestState {
+type RequestState = {
    data: { [key: string]: RequestData };
    selectedItem: RequestData | null;
 }

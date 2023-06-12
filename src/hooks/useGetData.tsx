@@ -6,11 +6,9 @@ type SnapshotCallback = (snapshot: DataSnapshot) => void;
 
 const useGetData = (path: string, callback: SnapshotCallback) => {
    const [isLoading, setIsLoading] = useState(true);
-   const [databaseRef, setDatabaseRef] = useState<DatabaseReference | null>(null);
 
    useEffect(() => {
       const newDatabaseRef: DatabaseReference = ref(database, path);
-      setDatabaseRef(newDatabaseRef);
 
       const handleDataSnapshot = (snapshot: DataSnapshot) => {
          callback(snapshot);

@@ -16,6 +16,8 @@ const RequestList = (props:RequestListProps) => {
    const [selectedRows, setSelectedRows] = useState<{ [key: string]: boolean }>({});
    const userRole = localStorage.getItem("role");
    const [reloadComponent, setReloadComponent] = useState(true);
+   const currentDate = new Date();
+   const formattedDateTime = currentDate.toLocaleString();
    const handleSelectRow = (requestID: string) => {
       setSelectedRows((prevSelectedRows) => {
          const updatedSelectedRows = { ...prevSelectedRows };
@@ -70,7 +72,7 @@ const RequestList = (props:RequestListProps) => {
             }));
          } else {
             if (currentData) {
-               const updatedData = { ...currentData, status: status };
+               const updatedData = { ...currentData, status: status,created_at: formattedDateTime};
                await set(requestRef, updatedData);
                setSelectedRows((prevSelectedRows) => ({
                   ...prevSelectedRows,
@@ -105,6 +107,7 @@ const RequestList = (props:RequestListProps) => {
          project_contractor_id: project_contractor_id,
          planner_id: planner_id,
          message: message,
+         created_at: formattedDateTime,
       };
       await set(newNotiRef, notification);
    }
