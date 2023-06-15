@@ -9,7 +9,6 @@ type ContractListProps = {
 
 const ContractList = (props:ContractListProps) => {
    const data = useSelector((state: RootState) => state.contract.data);
-   console.log('data ne',data)
    return (
       <TableContainer component={Paper}>
          <Table>

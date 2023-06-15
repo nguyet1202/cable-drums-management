@@ -86,7 +86,7 @@ const ButtonTheme = {
       text: {
          color:"gray" as "gray",
          size:"xs" as "xs",
-         styles:"w-[70%]"
+         styles:"w-[100%]"
       }
    },
    logoutBtn: {

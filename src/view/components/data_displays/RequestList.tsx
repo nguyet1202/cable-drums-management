@@ -16,12 +16,21 @@ const RequestList = (props:RequestListProps) => {
    const [selectedRows, setSelectedRows] = useState<{ [key: string]: boolean }>({});
    const userRole = localStorage.getItem("role");
    const [reloadComponent, setReloadComponent] = useState(true);
+   const currentDate = new Date();
+   const formattedDateTime = currentDate.toLocaleString();
    const handleSelectRow = (requestID: string) => {
-      setSelectedRows((prevSelectedRows) => ({
-         ...prevSelectedRows,
-         [requestID]: !prevSelectedRows[requestID],
-      }));
+      setSelectedRows((prevSelectedRows) => {
+         const updatedSelectedRows = { ...prevSelectedRows };
+         Object.keys(updatedSelectedRows).forEach((key) => {
+            if (key !== requestID) {
+               updatedSelectedRows[key] = false;
+            }
+         });
+         updatedSelectedRows[requestID] = !prevSelectedRows[requestID];
+         return updatedSelectedRows;
+      });
    };
+
 
    const updateContractAmount = async (contractId: string, withdrawAmount: number) => {
       try {
@@ -55,21 +64,28 @@ const RequestList = (props:RequestListProps) => {
          const planner_id = currentData.planner_id;
          if (currentData.status === "collected") {
             alert("You cannot update");
-         }
-         if (currentData) {
-            const updatedData = { ...currentData, status: status };
-            await set(requestRef, updatedData);
+         } else if (currentData.status === "new" && userRole === "project_contractor") {
+            alert("Contractors cannot update when status is new");
             setSelectedRows((prevSelectedRows) => ({
                ...prevSelectedRows,
                [requestId]: false,
             }));
-            pushNotification(requestId, supply_vendor_id, project_contractor_id, planner_id);
-            setReloadComponent(true);
-            if (status === "collected") {
-               await updateContractAmount(currentData.contract_id, currentData.amount);
-            }
          } else {
-            console.log(`Request with ID ${requestId} does not exist`);
+            if (currentData) {
+               const updatedData = { ...currentData, status: status,created_at: formattedDateTime};
+               await set(requestRef, updatedData);
+               setSelectedRows((prevSelectedRows) => ({
+                  ...prevSelectedRows,
+                  [requestId]: false,
+               }));
+               pushNotification(requestId, supply_vendor_id, project_contractor_id, planner_id);
+               setReloadComponent(true);
+               if (status === "collected") {
+                  await updateContractAmount(currentData.contract_id, currentData.amount);
+               }
+            } else {
+               console.log(`Request with ID ${requestId} does not exist`);
+            }
          }
       } catch (error) {
          console.error("Error:", error);
@@ -82,8 +98,8 @@ const RequestList = (props:RequestListProps) => {
       const newNotiId = newNotiRef.key;
       const message =
          userRole === "project_contractor"
-            ? `project contractor updated the status of request ${requestId}`
-            : `supply vendor updated the status of request ${requestId}`;
+            ? `project contractor ${project_contractor_id} updated the status of request ${requestId}`
+            : `supply vendor ${supply_vendor_id} updated the status of request ${requestId}`;
       const notification = {
          id: newNotiId || "",
          requestId: requestId || "",
@@ -91,6 +107,7 @@ const RequestList = (props:RequestListProps) => {
          project_contractor_id: project_contractor_id,
          planner_id: planner_id,
          message: message,
+         created_at: formattedDateTime,
       };
       await set(newNotiRef, notification);
    }

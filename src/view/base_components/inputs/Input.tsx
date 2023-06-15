@@ -28,7 +28,7 @@ function Input(props: InputProps) {
             {props.label}
          </Text>
          <input className={`${size.wrapper} ${theme.wrapper} ${props.wrapperStyles}`}
-                placeholder={props.label} type={props.type}
+                type={props.type}
                 value={props.value} defaultValue={props.defauvalue} onChange={props.onChange} onBlur={props.onBlur}
                 id={props.id}
          />
@@ -48,10 +48,9 @@ const InputSize = {
       },
    },
    md: {
-      wrapper: "w-[400px] py-[18px] px-[30px] mt-2 focus:outline-none  ",
+      wrapper: "w-[400px] py-[14px] px-[30px] mt-2 focus:outline-none  ",
       text: {
-         color:"pink" as "pink",
-         size: "sm" as "sm",
+         size: "lg" as "lg",
          weight: "normal" as "normal"
       },
    },
@@ -65,11 +64,10 @@ const InputSize = {
 }
 const InputTheme = {
    primary:{
-      wrapper:"bg-W rounded-lg font-font border-G border-[1px]",
+      wrapper:"bg-W rounded-lg font-font border-G2 border-[1px]",
       text: {
-         color: "pink" as "pink",
-         styles:"hidden",
-         weight:"bold" as "bold"
+         color: "gray" as "gray",
+         styles:"",
       }
    },
    secondary:{

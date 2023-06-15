@@ -62,6 +62,7 @@ const TextColor = {
    white: "text-W",
    white2:"text-W2",
    gray: "text-G",
+   gray2: "text-G2",
    black:"text-BB",
    pink:"text-P",
    pink2:"text-P2"

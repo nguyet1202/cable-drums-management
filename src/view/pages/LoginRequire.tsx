@@ -13,7 +13,7 @@ const LoginRequire = () => {
             You need to login to access this page
          </Text>
          <div className={`w-1/6`}>
-            <Button type="button" {...style.button} label={"Loogin here"} onClick={handleLogin}/>
+            <Button type="button" {...style.button} label={"Login here"} onClick={handleLogin}/>
          </div>
       </main>
    )

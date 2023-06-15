@@ -11,7 +11,7 @@ export type ContractData = {
    email: string;
 };
 
-interface ContractState {
+type ContractState ={
    data: { [key: string]: ContractData };
    selectedItem: ContractData | null;
 }

@@ -1,26 +1,25 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import {BiBell} from 'react-icons/bi';
 import {Modal} from '@mui/material';
 import {Button, Text} from "../../base_components";
-import {useGetData} from "../../../hooks";
-
-type NotificationMessage = {
+import {equalTo, get, orderByChild, query, ref} from "firebase/database";
+import {database} from "../../../configs/FirebaseConfig";
+import {AiFillCloseCircle} from "react-icons/ai";
+type NotificationProps = {
    id: string;
    message: string;
    planner_id: string;
    project_contractor_id: string;
    requestId: string;
    supply_vendor_id: string;
+   created_at: string;
 };
 const Notification = () => {
-   const [notificationMessage, setNotificationMessage] = useState<{ [key: string]: NotificationMessage }>({});
+   const userID = localStorage.getItem('userID');
+   const [notificationMessage, setNotificationMessage] = useState<{ [key: string]: NotificationProps } | null>(null);
    const [open, setOpen] = useState(false);
-   const limitedNotifications = Object.keys(notificationMessage)
-      .slice(-5)
-      .map(key => notificationMessage[key])
-      .reverse();
    const handleOpenModal = () => {
       setOpen(true)
    };
@@ -29,18 +28,40 @@ const Notification = () => {
       setOpen(false)
    };
 
-   const getDataNotification = useGetData('notification', (snapshot) => {
-      if (snapshot.exists()) {
-         setNotificationMessage(snapshot.val());
-      } else {
-         console.log('No data available');
-      }
-   });
+   useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const userDataSnapshot = await get(ref(database, `users/${userID}`));
+            const userData = userDataSnapshot.val();
+            if (userData.role === "planner") {
+               const requestsRef = ref(database, "notification");
+               const requestsQuery = query(requestsRef, orderByChild("planner_id"), equalTo(userData.planner_id));
+               const requestsSnapshot = await get(requestsQuery);
+               const notiData = requestsSnapshot.val();
+               setNotificationMessage(notiData);
+            } else if (userData.role === "supply_vendor") {
+               const requestsRef = ref(database, "notification");
+               const requestsQuery = query(requestsRef, orderByChild("supply_vendor_id"), equalTo(userData.supply_vendor_id));
+               const requestsSnapshot = await get(requestsQuery);
+               const notiData = requestsSnapshot.val();
+               setNotificationMessage(notiData);
+            } else if (userData.role === "project_contractor") {
+               const requestsRef = ref(database, "notification");
+               const requestsQuery = query(requestsRef, orderByChild("project_contractor_id"), equalTo(userData.project_contractor_id));
+               const requestsSnapshot = await get(requestsQuery);
+               const notiData = requestsSnapshot.val();
+               setNotificationMessage(notiData);
+            } else {
+               setNotificationMessage(null);
+            }
+         } catch (error) {
+            console.log(error)
+            setNotificationMessage(null);
+         }
+      };
 
-   if (getDataNotification) {
-      return <div>Loading...</div>;
-   }
-
+      fetchData();
+   }, []);
    return (
       <Box sx={{color: 'action.active'}}>
          <Badge color="secondary" variant="dot" className="hover:bg-gray-200">
@@ -61,27 +82,30 @@ const Notification = () => {
                   <div className={style.modalHeader}>
                      <Text size={`xl`}>Notification</Text>
                      <Button
-                        label="Make all as read"
-                        {...style.buttonModalBtn}
-                     />
-                  </div>
-                  {limitedNotifications.map(notification => (
-                     <Button
-                        key={notification.id}
-                        size={'xs'}
-                        theme={'NotiBtn'}
-                        iconLeft={<BiBell size={30} className="text-B1" onClick={handleOpenModal}/>}
-                        wrapperStyles={`px-50`}
-                        label={notification.message}
-                     ></Button>
-                  ))}
-                  <div className={` w-full flex flex-row gap-5`}>
-                     <Button
-                        label="CLOSE"
+                        label=""
+                        iconLeft={<AiFillCloseCircle size={40}/>}
                         {...style.buttonClose}
                         onClick={handleCloseModal}
                      />
                   </div>
+                  {notificationMessage === null ? (
+                     <Text>No notification</Text>
+                  ) : (
+                     Object.keys(notificationMessage || {}).map((notificationKey) => (
+                        <div>
+                           <Button
+                              key={notificationKey}
+                              size={'xs'}
+                              theme={'NotiBtn'}
+                              iconLeft={<BiBell size={30} className="text-B1" onClick={handleOpenModal}/>}
+                              wrapperStyles={`pl-[14%]`}
+                              wrapperIconStyles={`ml-[-5%]`}
+                              label={notificationMessage[notificationKey].message}
+                           ></Button>
+                        <Text wrapperStyles={`text-end`} size={'xs'} color={'blue'}> Create at :{notificationMessage[notificationKey].created_at}</Text>
+                        </div>
+                     ))
+                  )}
                </div>
             </div>
          </Modal>
@@ -91,7 +115,7 @@ const Notification = () => {
 
 const style = {
    modalWrapper: "fixed right-6 mt-[4%] flex items-center focus:outline-none ",
-   modalContent: " w-[450px] bg-B2 rounded-2xl px-5 pb-16 pt-10 flex flex-col gap-7",
+   modalContent: " w-[350px] bg-B2 rounded-2xl px-5 pb-16 pt-10 flex flex-col gap-2",
    closeButton: "bg-gray-500 text-white px-4 py-2 rounded",
    submitBtn: {
       size: "lg" as "lg",
@@ -108,14 +132,14 @@ const style = {
    buttonClose: {
       size: "xs" as "xs",
       theme: "A" as "A",
-      wrapperStyles: "w-1/3 border border-P2 bg-P2  mt-7"
+      wrapperStyles: " w-[8%] mt-[-17%] right-[5%]  py-[0px] ",
    },
-   modalHeader:"pb-3 border-b-[1px] border-b-P flex flex-row justify-between pb-8",
-   buttonModalBtn:{
-      color:"pink" as "pink",
-      theme:"A" as "A",
-      size:"xxs" as "xxs",
-      wrapperStyles:"underline px-0 py-0 ",
+   modalHeader: "pb-3 border-b-[1px] border-b-P flex flex-row justify-between",
+   buttonModalBtn: {
+      color: "pink" as "pink",
+      theme: "A" as "A",
+      size: "xxs" as "xxs",
+      wrapperStyles: "underline px-0 py-0 ",
 
    }
 }

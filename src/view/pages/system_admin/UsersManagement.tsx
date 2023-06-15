@@ -12,7 +12,6 @@ import {ref, remove} from "firebase/database";
 import {database} from "../../../configs/FirebaseConfig";
 import {CreateNewBtn} from "../../components";
 import {AddNewUser} from "./index";
-
 import {useGetData} from "../../../hooks";
 type UserData = {
    uid: string;
