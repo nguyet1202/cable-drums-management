@@ -9,11 +9,13 @@ import {PrivateRoute} from "./index";
 import {MainLayout} from "../view/layouts";
 
 import {useGetAuthStatus} from "../hooks";
+import {useSelector} from "react-redux";
+import {RootState} from "../store/store";
 
 const MainRouting = () => {
-   const userRole = localStorage.getItem('role');
+   const data = useSelector((state: RootState) => state.user.data);
    const {isLoggedIn, isloading} = useGetAuthStatus();
-   const isAuthenticated = isLoggedIn && userRole !== null;
+   const isAuthenticated = isLoggedIn && data.role !== null;
    if (isloading) {
       return <div>Loading...</div>;
    }
@@ -22,7 +24,7 @@ const MainRouting = () => {
          <Route path="/login-require" element={<LoginRequire/>}/>
          <Route path="/signin" element={<SignIn/>}/>
          <Route element={<MainLayout/>}>
-            <Route path="/" element={isAuthenticated ? <Navigate to={`/${userRole}`} replace={true}/> :
+            <Route path="/" element={isAuthenticated ? <Navigate to={`/${data.role}`} replace={true}/> :
                <Navigate to="/signin" replace={true}/>}/>
 
             <Route element={<AdminDashBoard/>}>

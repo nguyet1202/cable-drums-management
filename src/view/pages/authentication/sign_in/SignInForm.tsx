@@ -3,12 +3,15 @@ import {auth} from '../../../../configs/FirebaseConfig';
 import {signInWithEmailAndPassword, AuthError, UserCredential} from 'firebase/auth';
 import {ref, get} from 'firebase/database';
 import {database} from '../../../../configs/FirebaseConfig';
-import {Button, Input, Select, Text} from '../../../base_components';
+import {Button, Input,Text} from '../../../base_components';
 import {useNavigate} from "react-router-dom";
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import {setDataUser} from "../../../../store/slices/userSlice";
 
 function SignInForm() {
+   const dispatch = useDispatch();
    const navigate = useNavigate();
    const handleLogin = async () => {
       try {
@@ -17,17 +20,13 @@ function SignInForm() {
             formik.values.email,
             formik.values.password
          );
-
          const user = userCredential.user;
          localStorage.setItem('userID', user.uid);
-
          const userDataSnapshot = await get(ref(database, `users/${user.uid}`));
-         const userData = userDataSnapshot.val();
 
-         if (userData && userData.role === formik.values.role) {
-            localStorage.setItem('role', formik.values.role);
-            const userRole = localStorage.getItem('role');
-            navigate(`/${formik.values.role}`, { replace: true });
+         if (userDataSnapshot.exists()) {
+            dispatch(setDataUser(userDataSnapshot.val()));
+            navigate(`/${userDataSnapshot.val().role}`, { replace: true });
          } else {
             alert("Invalid user role");
          }
@@ -41,7 +40,6 @@ function SignInForm() {
 
    const formik = useFormik({
       initialValues: {
-         role: '',
          email: '',
          password: '',
       },
@@ -54,42 +52,21 @@ function SignInForm() {
                /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
                "The password format is not valid"
             ),
-         role: Yup.string().required('Role is required'),
       }),
       onSubmit: handleLogin,
    });
 
    return (
       <div className={`${style.wrapper}`}>
+         <Text {...style.text}> LOGIN HERE!</Text>
          <form className={`${style.formwrapper}`} method="post" onSubmit={formik.handleSubmit}>
-            <Text {...style.text}>LOGIN HERE</Text>
-            <div className={`flex flex-col gap-3`}>
-               <Select
-                  id="role"
-                  name="role"
-                  {...style.select}
-                  className={`border ${formik.touched.role && formik.errors.role ? 'w-[200px] border-0 border-P outline-0 px-[120px]' : 'border-0'}`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.role}
-               >
-                  <option value={""} disabled>Choose your role</option>
-                  <option value="admin">Admin</option>
-                  <option value="planner">Planner</option>
-                  <option value="supply_vendor">Supply Vendor</option>
-                  <option value="project_contractor">Project Contractor</option>
-               </Select>
-               {formik.touched.role && formik.errors.role && (
-                  <Text {...style.textError}>{formik.errors.role}</Text>
-               )}
-            </div>
             <div className={`flex flex-col gap-3`}>
                <Input
                   id="email"
                   name="email"
                   {...style.inputEmail}
                   wrapperStyles={`border ${formik.touched.email && formik.errors.email ? 'border-P' : 'border-0'}`}
-                  label="Enter email"
+                  label="Email"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
@@ -123,23 +100,19 @@ function SignInForm() {
 
 const style = {
    wrapper: "flex flex-col gap-[30px] justify-center items-center",
-   formwrapper: 'flex flex-col gap-[30px] justify-center items-center',
+   formwrapper: 'flex flex-col gap-[30px] justify-center items-center px-[30px] py-[50px] shadow-2xl bg-W1 rounded-lg',
    inputEmail: {
       size: 'md' as 'md',
       wrapperStyles: 'outline-0 ',
    },
-   select: {
-      selectSize: 'md' as 'md',
-      theme: 'primary' as 'primary',
-      wrapperStyles: 'border-0 border-B1 outline-0 px-[120px]',
-   },
    text: {
       size: '2xl' as '2xl',
       weight: 'extrabold' as 'extrabold',
-      color: 'pink' as 'pink',
+      color: 'black' as 'black',
       font: 'B' as 'B',
       wrapperStyles: 'text-center lg:w-full xl:text-4xl 2xl:text-4xl',
    },
+   smalltext:{},
    submitBtn: {
       size: "lg" as "lg",
       theme: "secondary" as "secondary",
