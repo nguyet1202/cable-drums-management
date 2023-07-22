@@ -1,5 +1,5 @@
 import React from "react";
-import {Text} from "../../base_components";
+import {Text} from "../../base_components/data_display";
 
 const LoginText = () => {
    return (

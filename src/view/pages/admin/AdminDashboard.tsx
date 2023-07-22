@@ -1,9 +1,11 @@
 import {DashboardLayout} from '../../layout'
+import UserManagement from "./UserManagement";
+
 function AdminDashboard() {
 
    return (
       <DashboardLayout
-         main={<>This is Admin page</>}
+         main={<UserManagement/>}
       />
    )
 }

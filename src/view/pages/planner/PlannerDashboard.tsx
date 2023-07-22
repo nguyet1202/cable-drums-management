@@ -1,6 +1,6 @@
 import {DashboardLayout} from "../../layout";
 import {useMemo} from "react"
-import {TabNav, TabRouteType} from "../../components";
+import {TabNav,TabRouteType} from "../../components";
 import {
    People,
    NotificationsSharp,

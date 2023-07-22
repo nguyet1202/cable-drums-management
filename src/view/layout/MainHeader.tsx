@@ -1,5 +1,5 @@
-import {Notification, InforUser, LogoutBtn} from "../components";
-import {Logo} from '../base_components'
+import {Notification, InforUser, LogoutBtn} from "../components/data_display";
+import {Logo} from '../base_components/data_display'
 
 const MainHeader = () => {
 

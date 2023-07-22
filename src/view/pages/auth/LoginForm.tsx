@@ -2,14 +2,14 @@ import {auth} from "../../../configs/firebaseConfig";
 import {signInWithEmailAndPassword, AuthError, UserCredential} from 'firebase/auth';
 import {ref, get} from 'firebase/database';
 import {database} from "../../../configs/firebaseConfig";
-import {Button, Text} from "../../base_components";
+import {Button, Text} from "../../base_components/data_display";
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch} from 'react-redux';
 import {setDataUser} from "../../../store/slices/userSlice";
 import {setLoggedIn, setLoading} from "../../../store/slices/authSlice";
 import {useNavigate} from "react-router-dom";
-import {PasswordField} from "../../components";
+import {PasswordField} from "../../components/data_display";
 import {TextField,} from '@mui/material';
 
 function LoginForm() {

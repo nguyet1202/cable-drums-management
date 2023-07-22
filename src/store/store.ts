@@ -4,10 +4,12 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import UserReducer from './slices/userSlice';
 import AuthReducer from "./slices/authSlice";
+import ModalReducer from "./slices/modalSlice";
 
 const reducer = combineReducers({
    auth: AuthReducer,
    user: UserReducer,
+   modal: ModalReducer,
 });
 
 const persistConfig = {
