@@ -2,9 +2,13 @@ import * as React from 'react';
 import {useState} from "react";
 import Box from '@mui/material/Box';
 import useGetData from "../../../hooks/useGetData";
+import AddNewUser from "./AddNewUser";
 import {Loading} from "../../base_components";
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
+import {CustomToolbar} from "../../base_components";
+import UserAction from "./UserAction";
+import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
 import {HeaderTable} from "../../components/data_display";
+import {RoleChip} from "../../components/data_display";
 
 type UserData = {
    uid: string;
@@ -51,9 +55,13 @@ const UserManagement = () => {
          }}
       >
          <HeaderTable label={'MANAGEMENT USERS'}/>
+         <AddNewUser/>
          <DataGrid
             rows={rows}
             columns={columns}
+            slots={{
+               toolbar: CustomToolbar,
+            }}
          />
       </Box>
    );
@@ -63,8 +71,19 @@ const columns: GridColDef[] = [
    {field: 'name', headerName: 'Name', flex: 0.2, headerClassName: ' text-D1 font-extrabold text-xl'},
    {
       field: 'role', headerName: 'Role', flex: 0.2, headerClassName: 'text-D1 font-extrabold text-xl',
+      renderCell: (params: GridRenderCellParams) => <RoleChip role={params.value}/>
    },
    {field: 'createAt', headerName: 'Create At', flex: 0.2, headerClassName: ' text-D1 font-extrabold text-xl'},
+   {
+      field: 'actions',
+      headerName: 'Actions',
+      type: 'actions',
+      flex: 0.1,
+      headerClassName: 'text-D1 font-extrabold text-xl',
+      renderCell: (params: GridRenderCellParams) => (
+         <UserAction index={params.row.index} uid={params.row.id} />
+      ),
+   },
 ];
 
 export default UserManagement
