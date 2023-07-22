@@ -1,8 +1,8 @@
-import {Button} from "../base_components";
+import {Button} from "../../base_components/data_display";
 import { FiLogOut } from "react-icons/fi";
 import {getAuth, signOut} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import {setLoggedIn} from "../../store/slices/authSlice";
+import {setLoggedIn} from "../../../store/slices/authSlice";
 import { useDispatch } from 'react-redux';
 const LogoutBtn = () => {
    const navigate = useNavigate();
