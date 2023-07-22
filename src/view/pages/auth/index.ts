@@ -1,2 +1,3 @@
 import Login from './Login'
-export {Login}
+import LoginRequire from "./LoginRequire";
+export {Login,LoginRequire}
