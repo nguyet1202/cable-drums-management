@@ -1,4 +1,4 @@
-export * from './base_components/data_display'
-export * from './components/data_display'
+export * from './base_component'
+export * from './components'
 export * from './layout'
 export * from './pages'

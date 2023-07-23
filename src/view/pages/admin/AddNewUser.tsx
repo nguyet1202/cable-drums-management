@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text} from "../../base_components/data_display";
+import {Text} from "../../base_component";
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import {auth,database} from "../../../configs/firebaseConfig";
 import {ref, set} from "firebase/database";

@@ -1,4 +1,4 @@
-import {Button} from "../../base_components";
+import {Button} from "../../base_component";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { useDispatch } from 'react-redux';
 import {openModal} from "../../../store/slices/modalSlice";
