@@ -3,8 +3,10 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/store";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
-import {CustomToolbar, Text} from "../../../base_component";
+import {CustomToolbar} from "../../../base_component";
 import WithdrawRequestAction from "./WithdrawRequestAction";
+import {CreateWithdrawRequest} from "../../../pages";
+import {HeaderTable} from "../index";
 const RequestList = () => {
 
    const data = useSelector((state: RootState) => state.request.data);
@@ -22,10 +24,8 @@ const RequestList = () => {
 
    return (
       <Box {...cfn.wrapper}>
-         <div
-            className={`flex flex-row justify-between items-center w-full border-[1px] border-G2 pl-5 bg-G h-[72px] `}>
-            <Text size={'2xl'} weight={'bold'} color={'white'}>{'ALL REQUEST'}</Text>
-         </div>
+         <HeaderTable label={'ALL REQUEST'}/>
+         <CreateWithdrawRequest/>
          <DataGrid
             columns={columns} rows={rows ?? []}
             slots={{toolbar: CustomToolbar}}
