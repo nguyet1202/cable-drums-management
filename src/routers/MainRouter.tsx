@@ -8,8 +8,8 @@ import {
    PlannerDashboard,
    PageLayout,
    LoginRequire,
-   Loading
 } from "../view";
+import {Loading} from "../view";
 import {PrivateRoute} from "./PrivateRoute";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";

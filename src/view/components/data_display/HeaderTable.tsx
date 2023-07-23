@@ -1,5 +1,5 @@
 import CreateNewBtn from "./CreateNewBtn";
-import { Text } from "../../base_components";
+import { Text } from "../../base_component";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/store";
 

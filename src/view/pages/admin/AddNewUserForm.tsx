@@ -3,7 +3,7 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {Button, DialogActions, DialogContent,} from '@mui/material';
 import {Send} from '@mui/icons-material';
-import {InputMUI, Text, BaseSelect} from "../../base_components";
+import {InputMUI,BaseSelect,Text} from "../../base_component";
 import {PasswordField} from "../../components/data_display";
 import {get, ref} from "firebase/database";
 import {database} from "../../../configs/firebaseConfig";

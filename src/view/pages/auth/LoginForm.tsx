@@ -2,7 +2,7 @@ import {auth} from "../../../configs/firebaseConfig";
 import {signInWithEmailAndPassword, AuthError, UserCredential} from 'firebase/auth';
 import {ref, get} from 'firebase/database';
 import {database} from "../../../configs/firebaseConfig";
-import {Button, Text} from "../../base_components/data_display";
+import {Button,Text} from "../../base_component";
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch} from 'react-redux';

@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import {BiBell} from 'react-icons/bi';
-
 const Notification = () => {
 
    return (
