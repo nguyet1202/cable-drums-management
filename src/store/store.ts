@@ -5,11 +5,15 @@ import storage from "redux-persist/lib/storage";
 import UserReducer from './slices/userSlice';
 import AuthReducer from "./slices/authSlice";
 import ModalReducer from "./slices/modalSlice";
+import ContractReducer from "./slices/contractSlice";
+import RequestReducer from "./slices/requestSlice";
 
 const reducer = combineReducers({
    auth: AuthReducer,
    user: UserReducer,
    modal: ModalReducer,
+   contract:ContractReducer,
+   request:RequestReducer,
 });
 
 const persistConfig = {
