@@ -30,6 +30,7 @@ const StatusChip = (props: RoleChipProps) => {
          variant="filled"
          color={state?.color}
          label={<p className="text-white">{state?.label}</p>}
+         className={props.isDisabled ? "opacity-60 pointer-events-none" : ""}
       />
    );
 };

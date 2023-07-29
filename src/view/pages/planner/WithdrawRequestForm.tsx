@@ -15,6 +15,7 @@ type FormValues = {
 
 type addNewUserFormProps = {
    onSubmit: (values: FormValues) => void;
+   contractAmount?:number;
 };
 const WithdrawRequestForm = (props: addNewUserFormProps) => {
 
@@ -44,8 +45,11 @@ const WithdrawRequestForm = (props: addNewUserFormProps) => {
       validationSchema,
       onSubmit: (values) => props.onSubmit(values),
    });
+
    const renderInputField = (id: keyof FormValues, label: string, type: string) => {
+
       const value = formik.values[id] ?? formik.values[id].toString();
+
       return (
          <InputMUI
             id={id}
@@ -70,8 +74,8 @@ const WithdrawRequestForm = (props: addNewUserFormProps) => {
    useGetData('contracts', (snapshot) => {
       if (snapshot.exists()) {
          const Data = snapshot.val();
-         const ListcontractID = Data ? Object.keys(Data) : [];
-         setContractID(ListcontractID)
+         const ListContractID = Data ? Object.keys(Data) : [];
+         setContractID(ListContractID)
       } else {
          console.log('No data available');
       }
@@ -83,10 +87,7 @@ const WithdrawRequestForm = (props: addNewUserFormProps) => {
             <div className="flex flex-col gap-8">
                <div>
                   <BaseSelect
-                     id="contract_id"
-                     name="contract_id"
-                     labelId="mySelectLabel"
-                     label="Contract ID"
+                     id="contract_id" name="contract_id" labelId="mySelectLabel" label="Contract ID"
                      options={contractID}
                      value={formik.values.contract_id}
                      onChange={formik.handleChange}
@@ -106,10 +107,7 @@ const WithdrawRequestForm = (props: addNewUserFormProps) => {
                )}
                <div className={'mt-4'}>
                   <BaseSelect
-                     id="project_contractor_name"
-                     name="project_contractor_name"
-                     labelId="mySelectLabel"
-                     label="Contractor Name"
+                     id="project_contractor_name" name="project_contractor_name" labelId="mySelectLabel" label="Contractor Name"
                      options={contractorNames}
                      value={formik.values.project_contractor_name}
                      onChange={formik.handleChange}
