@@ -1,6 +1,8 @@
 import {useState, useEffect} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/store";
+import {database} from "../../../../configs/firebaseConfig";
+import {get, ref, set} from "firebase/database";
 import StatusChip from "./StatusChip";
 import * as React from "react";
 
@@ -9,26 +11,44 @@ type WithdrawRequestActionProps = {
 };
 
 const WithdrawRequestAction = ({params}: WithdrawRequestActionProps) => {
+
    const role = useSelector((state: RootState) => state.user.data.role);
+
    const [disabled, setDisabled] = useState<boolean>(true)
+   const [newStatus, setNewStatus] = useState<string>('')
+
    useEffect(() => {
       if (role === "supply_vendors" && params.row.status === "new") {
          setDisabled(false);
+         setNewStatus('ready to collect')
       } else if (
          role === "project_contractors" &&
          params.row.status === "ready to collect"
       ) {
          setDisabled(false);
+         setNewStatus('collected')
       } else {
          setDisabled(true);
       }
    }, [role, params.row.status]);
 
+   const updateRequestStatus = async (requestId: string, newstatus: string) => {
+      const requestRef = ref(database, `withdraw_requests/${requestId}`);
+      const snapshot = await get(requestRef);
+      const currentData = snapshot.val();
+      if (currentData.status === ("collected" || "new") && role === "project_contractor") {
+         setDisabled(true)
+      } else {
+         const updatedData = {...currentData, status: newstatus, created_at: new Date().toLocaleString()};
+         await set(requestRef, updatedData);
+         setDisabled(true)
 
+      }
+   };
 
    return (
       <div>
-         <StatusChip status={params.row.status} isDisabled={disabled}/>
+         <StatusChip status={params.row.status} isDisabled={disabled} onClick={() => updateRequestStatus(params.row.id, newStatus)} />
       </div>
    );
 };
