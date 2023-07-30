@@ -12,6 +12,7 @@ import {
     DialogTitle,
     IconButton,
 } from '@mui/material';
+import usePushNotification from "../../../hooks/usePushNotification";
 
 type FormValues = {
     amount: number;
@@ -24,7 +25,7 @@ const CreateWithdrawRequest = () => {
     const dispatch = useDispatch();
     const showModal = useSelector((state: RootState) => state.modal.showModal);
     const plannerID = useSelector((state: RootState) => state.user.data.teamID);
-
+    const {pushNotification, isLoading, error} =usePushNotification();
     const handleCloseModal = () => {
         dispatch(closeModal());
     };
@@ -53,7 +54,7 @@ const CreateWithdrawRequest = () => {
             const withdrawRequestsRef = ref(database, 'withdraw_requests');
             const id = GetRequestRef.val() ? Object.keys(GetRequestRef.val()).length : 0;
             const newRequestId = id + 1;
-            const customID = `request_0${newRequestId}`;
+            const customID = `request_${newRequestId}`;
 
             const newRequestRef = child(withdrawRequestsRef, customID)
             const newRequest = {
@@ -70,6 +71,11 @@ const CreateWithdrawRequest = () => {
                 created_at: new Date().toLocaleDateString(),
             };
             await set(newRequestRef, newRequest);
+
+            if (plannerID) {
+                await pushNotification(customID, supplyID, contractorId, plannerID);
+            }
+
             handleCloseModal();
         }
     }
