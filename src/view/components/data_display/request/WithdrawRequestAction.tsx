@@ -5,6 +5,7 @@ import {database} from "../../../../configs/firebaseConfig";
 import {get, ref, set} from "firebase/database";
 import StatusChip from "./StatusChip";
 import * as React from "react";
+import usePushNotification from "../../../../hooks/usePushNotification";
 
 type WithdrawRequestActionProps = {
     params: any;
@@ -13,6 +14,7 @@ type WithdrawRequestActionProps = {
 const WithdrawRequestAction = ({params}: WithdrawRequestActionProps) => {
 
     const role = useSelector((state: RootState) => state.user.data.role);
+    const {pushNotification, isLoading, error} =usePushNotification();
 
     const [disabled, setDisabled] = useState<boolean>(true)
     const [newStatus, setNewStatus] = useState<string>('')
@@ -51,6 +53,7 @@ const WithdrawRequestAction = ({params}: WithdrawRequestActionProps) => {
             const updatedData = {...currentData, status: newstatus, created_at: new Date().toLocaleString()};
             await set(requestRef, updatedData);
             await updateContractAmount(currentData.contract_id, currentData.amount)
+            await pushNotification(requestId, currentData.supply_vendor_id, currentData.project_contractor_id, currentData.plannerID);
             setDisabled(true)
 
         }

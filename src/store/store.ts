@@ -7,6 +7,7 @@ import AuthReducer from "./slices/authSlice";
 import ModalReducer from "./slices/modalSlice";
 import ContractReducer from "./slices/contractSlice";
 import RequestReducer from "./slices/requestSlice";
+import NotificationsReducer from "./slices/notificationsSlice";
 
 const reducer = combineReducers({
    auth: AuthReducer,
@@ -14,6 +15,7 @@ const reducer = combineReducers({
    modal: ModalReducer,
    contract:ContractReducer,
    request:RequestReducer,
+   notifications: NotificationsReducer,
 });
 
 const persistConfig = {

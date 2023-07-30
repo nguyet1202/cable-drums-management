@@ -10,6 +10,7 @@ const usePushNotification = () => {
    const role = useSelector((state: RootState) => state.user.data.role);
 
    const pushNotification = async (
+
       newRequestId: string,
       supply_vendor_id: string,
       project_contractor_id: string,
@@ -19,11 +20,13 @@ const usePushNotification = () => {
       const withdrawNotisRef = ref(database, 'notification');
       const newNotiRef = push(withdrawNotisRef);
       const newNotiId = newNotiRef.key;
+
       const message =
          role === "project_contractors"
             ? `project contractor ${project_contractor_id} updated the status of request ${newRequestId}`
             : role === "supply_vendors" ? `supply vendor ${supply_vendor_id} updated the status of request ${newRequestId}`
                : `Planner team ${planner_id} created a new request ${newRequestId}`;
+
       const notification = {
          id: newNotiId || '',
          requestId: newRequestId || '',
@@ -33,6 +36,7 @@ const usePushNotification = () => {
          created_at: new Date().toLocaleDateString(),
          message: message,
       };
+
       await set(newNotiRef, notification);
    };
 
