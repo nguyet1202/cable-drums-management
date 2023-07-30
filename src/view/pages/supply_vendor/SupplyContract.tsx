@@ -3,7 +3,6 @@ import { get, ref, query, equalTo, orderByChild } from "firebase/database";
 import {database} from "../../../configs/firebaseConfig";
 import {useDispatch} from "react-redux";
 import {ContractList} from "../../components";
-import {Loading} from "../../base_component";
 import {setData} from "../../../store/slices/contractSlice";
 
 const SupplyContract = () => {
