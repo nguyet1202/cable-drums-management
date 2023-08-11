@@ -1,46 +1,94 @@
-# Getting Started with Create React App
+Account to login : 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`admin` role :
+email:`administrator@gmail.com`
+password: `admin@A2023`
 
-## Available Scripts
+`planner` role :
+email: `an.planner@gmail.com`
+password: `anteam@12345`
 
-In the project directory, you can run:
+`supply vendor` role :
+email : `ngoclansupplyvendor1@gmail.com`
+password : `ngoclan@new12345`
 
-### `npm start`
+`project contractor` role :
+email: `lan.projectcontractor@gmail.com`
+password : `rms@1023`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+`Requirement`
 
-### `npm test`
+# Requirements
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Company A is a business that need to manage the reliability of energy and gas supply in Singapore. For various projects related to build and maintain the utilities stations, cable drums is one of the most essential parts need to be used. The current processes to procure and consume cable drum are manual with lots of emails and offline coordinations. The involving parties are:
 
-### `npm run build`
+- Planner Team : staff from Company A, to do the capacity planning, procure the cable drum via Contract with Supply Vendors and manage the consumption via coordinating with Sypply Vendors and Project Contractors
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Supply Vendor Team : vendors who have the contract awarded by Company A to supply cable drums, to manufacture and stock cable drums at their own warehouse according to the contracting amount
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Project Contractor Team : vendors who have the contract awarded by Company A to build & maintain the utilities stations, to collect the cable drums from Supply Vendor warehouse and carry out the neccessary project works
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ 
 
-### `npm run eject`
+There is an initiative to build the web portal which will be able to help various parties to handle the processes end-to-end digitally. The following Use Cases are critical to satisfy:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+ 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Use cases
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. As the System Admin,
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    I want to manage the account for users with various roles (Planner Team, Supply Vendor Team and Project Contractor Team)
 
-## Learn More
+    So that the users can login and carry out necessary actions according to their role
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    (Assumption: System Admin account is pre-created in DB and cannot be modified, there is no need to do verification during account creation for other users)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+ 
+
+2. As the Planner Team user,
+
+    I want to view all the contracts of cable drums supply in the system from all Supply Vendors, each contract will include minimally the start date, end date and contracting amount of cable drums to be supplied by specific Supply Vendor
+
+    So that I can plan and manage the usage of cable drums
+
+    (Assumption: procurement processes involving calling the tenders, selecting vendors/contractors, awarding contracts are not in scope of the system, we only managed the confirmed Contracts, Supply Vendors and Project Contractors. Contracts can be pre-created in DB)
+
+ 
+
+3. As the Planner Team user,
+
+    I want to plan and manage the usage of cable drums by:
+
+        - creating the Request For Withdraw for cable drums from any available contract with Supply Vendor of choice as long as the quantity not exceeding remaining contracting amount
+
+        - and assigning the newly created Request For Withdraw to the Project Contractor of choice so that the appointed Project Contractor can contact the Supply Vendor to collect the cable drums accordingly
+
+    And then I can see the Request For Withdraw in the system with status "New" together with any existing Request For Withdraw with up-to-date status
+
+    So that I can manage the operations with neccessary actions and solving the issues if needed
+
+ 
+
+4. As the Supply Vendor Team user,
+
+    I want to see the Request For Withdraw from the contract of my team
+
+    So that I can prepare the requesting cable drums in warehouse for collection
+
+    And then I can update the status of Request For Withdraw in the system become "Ready to Collect" when the preparation is finished
+
+    So that the Project Contractor Team can arrange the collection
+
+ 
+
+5. As the Project Contractor Team user,
+
+    I want to receive notification via email when there is new Request For Withdraw assign to my team
+
+    So that I can arrange the collection for cable drum to do neccesary project works
+
+    And then I can log in to the System and update the status of Request For Withdraw become "Collected"
+
+    So that the system can update the remaining cable drums amount of relevant contract for future planning and managing by Planner Team
